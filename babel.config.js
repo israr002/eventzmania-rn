@@ -11,6 +11,7 @@ module.exports = {
           i18n: './src/i18n',
           assets: './src/assets',
           screens: './src/screens',
+          styles: './src/styles',
           navigation: './src/navigation',
           tests: './tests',
         },
