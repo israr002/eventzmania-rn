@@ -1,21 +1,27 @@
 module.exports = {
-  presets: ['module:@react-native/babel-preset'],
+  presets: ["module:@react-native/babel-preset"],
   plugins: [
-    'react-native-reanimated/plugin',
+    "react-native-reanimated/plugin",
     [
-      'module-resolver',
+      "module-resolver",
       {
-        root: ['./src'],
+        root: ["./src"],
         alias: {
-          components: './src/components',
-          i18n: './src/i18n',
-          assets: './src/assets',
-          screens: './src/screens',
-          styles: './src/styles',
-          navigation: './src/navigation',
-          tests: './tests',
-        },
-      },
-    ],
-  ],
+          api: "./src/api",
+          assets: "./src/assets",
+          components: "./src/components",
+          constants: "./src/constants",
+          context: "./src/context",
+          hooks: "./src/hooks",
+          i18n: "./src/i18n",
+          navigation: "./src/navigation",
+          screens: "./src/screens",
+          styles: "./src/styles",
+          tests: "./tests",
+          types: "./src/types",
+          utils: "./src/utils"
+        }
+      }
+    ]
+  ]
 };

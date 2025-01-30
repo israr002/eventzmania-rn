@@ -5,24 +5,25 @@
  * @format
  */
 
-import React from 'react';
-import {
-  SafeAreaView,
-} from 'react-native';
 
-import Onboarding from 'screens/Onboarding';
+import { NavigationContainer } from "@react-navigation/native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AuthStack from "navigation/AuthStack";
+import React from "react";
 
 function App(): React.JSX.Element {
+  const [queryClient] = React.useState(() => new QueryClient());
 
-  const backgroundStyle = {
-    flex: 1,
-  };
 
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <Onboarding />
-    </SafeAreaView>
+
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <AuthStack initialScreen="Onboarding" />
+      </NavigationContainer>
+    </QueryClientProvider>
+
   );
 }
 

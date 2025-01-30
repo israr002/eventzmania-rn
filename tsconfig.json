@@ -4,14 +4,20 @@
     "baseUrl": ".",
     "paths": {
       "*": ["src/*"],
-      "components": ["src/components"],
-      "i18n": ["src/i18n"],
+      "api": ["src/api"],
       "assets": ["src/assets"],
+      "components": ["src/components"],
+      "context": ["src/context"],
+      "constants": ["src/constants"],
+      "hooks": ["src/hooks"],
+      "i18n": ["src/i18n"],
+      "navigation": ["src/navigation"],
       "screens": ["src/screens"],
       "styles": ["src/styles"],
-      "navigation": ["src/navigation"],
       "tests": ["tests"],
-    },
+      "types": ["src/types"],
+      "utils": ["src/utils"]
+    }
   },
   "extends": "@react-native/typescript-config/tsconfig.json"
 }
