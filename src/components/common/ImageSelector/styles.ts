@@ -27,8 +27,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    marginHorizontal: Metrics.margin.xSmall,
-    paddingVertical: Metrics.padding.base
+    marginHorizontal: Metrics.margin.tiny,
+    paddingVertical: Metrics.padding.xSmall
   },
   imageSelector: {
     alignItems: "center",
@@ -71,6 +71,8 @@ export const styles = StyleSheet.create({
   },
   selectedImage: {
     borderRadius: 60,
-    resizeMode: "cover"
+    height: 120,
+    resizeMode: "cover",
+    width: 120
   }
 });

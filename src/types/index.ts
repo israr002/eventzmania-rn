@@ -2,7 +2,7 @@ export type Amenity = {
   name: string;
   id: number;
   value: string;
-}
+};
 export type Venue = {
   id: number;
   profileImage: string;
@@ -18,14 +18,14 @@ export type Venue = {
   eventStartTime: string;
   eventEndTime: string;
   totalCapacity: number;
-}
+};
 
 export type ImageData = {
-  uri: string;
+  uri?: string;
   [key: string]: any;
-}
+};
 
-export type User ={
+export type User = {
   id: number;
   firstName: string;
   lastName: string;
@@ -33,9 +33,9 @@ export type User ={
   email: string;
   profileImage: string;
   city: string;
-}
+};
 
-export type Booking ={
+export type Booking = {
   id: number;
   eventId: string;
   name: number;
@@ -44,7 +44,7 @@ export type Booking ={
   ticketPrice: number;
   bookedOn: Date;
   date: Date;
-}
+};
 
 export type VenueBooking = {
   id: number;
@@ -53,7 +53,7 @@ export type VenueBooking = {
   totalAmount: number;
   bookedOn: Date;
   date: Date;
-}
+};
 
 export type Post = {
   id: number;
@@ -68,7 +68,7 @@ export type Post = {
   liked: boolean;
   venueId: number;
   eventsAvailable: boolean;
-}
+};
 
 export type Comment = {
   id: number;
@@ -80,7 +80,7 @@ export type Comment = {
   liked: boolean;
   replyCount?: number;
   replies?: Comment[];
-}
+};
 
 export type VenueEvent = {
   id: number;
@@ -94,7 +94,7 @@ export type VenueEvent = {
   venueId: number;
   venueName: string;
   venueAddress: string;
-}
+};
 
 export type dropdownItem = {
   label: string;

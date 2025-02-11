@@ -11,7 +11,6 @@ import { AuthStackParamList, AuthStackProps } from "./types";
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStack: React.FC<AuthStackProps> = ({ initialScreen }) => {
-  
   return (
     <Stack.Navigator
       initialRouteName={initialScreen}

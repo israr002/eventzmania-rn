@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigation } from "@react-navigation/native";
 import EmailSvg from "assets/images/icons/email.svg";
 import LocationSvg from "assets/images/icons/location.svg";
 import UserSvg from "assets/images/icons/user.svg";
@@ -27,6 +28,7 @@ type SignUpFormData = {
 const SignUpScreen: React.FC = () => {
   const [imageData, setImageData] = useState<ImageData>(null);
 
+  const navigation = useNavigation();
   const { signUpMutation } = useAuth();
   const { t } = useTranslation();
   const { signUpSchema } = useZodSchema();

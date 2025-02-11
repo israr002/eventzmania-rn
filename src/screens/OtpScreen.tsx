@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { Colors } from "styles/colors";
 import { apiCallService } from "utils/apiCallUtils";
 
 type OtpFormData = {
@@ -80,7 +79,6 @@ const OtpScreen: React.FC = () => {
     };
     verifyOtpMutation.mutate(requestData, {
       onSuccess: async res => {
-        console.log("verification successful:", res);
         if (res) {
           if (res?.data?.isRegistered !== 1) {
             setOtp(["","","",""])
@@ -155,16 +153,16 @@ const OtpScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: Colors.Black,
+    backgroundColor: "00000",
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 50
   },
   otpBox: {
-    borderColor: Colors.White,
+    borderColor: "00000",
     borderRadius: 10,
     borderWidth: 1,
-    color: Colors.White,
+    color: "00000",
     fontSize: 20,
     height: 50,
     textAlign: "center",
@@ -182,11 +180,11 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   resendSubText: {
-    color: Colors.White,
+    color: "00000",
     fontSize: 14
   },
   resendText: {
-    color: Colors.Primary,
+    color: "00000",
     fontSize: 16,
     fontWeight: "bold"
   },

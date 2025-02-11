@@ -27,8 +27,7 @@ const LoginScreen: React.FC = () => {
   const sendOtp: SubmitHandler<SendOtpRequest> = async data => {
     sendOtpMutation.mutate(data, {
       onSuccess: res => {
-        console.log("Login successful:", res.data);
-        const { resendTimeInSeconds } = res?.data;
+        const { resendTimeInSeconds } = res.data;
     navigation.navigate("Otp", {
       resendTimeInSeconds: resendTimeInSeconds,
       mobileNo: data.mobileNo

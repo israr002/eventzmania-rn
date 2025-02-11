@@ -48,9 +48,9 @@ export const useZodSchema = () => {
       .min(2, { message: t("city-must-be-at-least-2-characters-long") })
       .max(20, { message: t("city-must-be-less-than-20-characters-long") })
       .nonempty({ message: t("city-is-required") }),
-      acceptTerms: z.boolean().refine(value => value === true, {
-        message: t("you-must-accept-the-terms-and-conditions")
-      })
+    acceptTerms: z.literal(true).refine(value => value === true, {
+      message: t("you-must-accept-the-terms-and-conditions")
+    })
   });
 
   return {

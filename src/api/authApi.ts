@@ -1,4 +1,5 @@
-import { API_ENDPOINTS } from "../constants/apiEndpoints";
+import { API_ENDPOINTS } from "constants/apiEndpoints";
+
 import { apiCallService } from "./apiService";
 
 export type SendOtpRequest = {
@@ -27,5 +28,5 @@ export const verifyOtp = async (data: VerifyOtpRequest) => {
 };
 
 export const signUp = async (data: SignUpRequest) => {
-  return apiCallService("POST", API_ENDPOINTS.SIGN_UP, data);
+  return apiCallService("POST", API_ENDPOINTS.SIGNUP, data);
 };

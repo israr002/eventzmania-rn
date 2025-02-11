@@ -44,5 +44,18 @@
   "city-must-be-at-least-2-characters-long": "La ville doit comporter au moins 2 caractères",
   "city-must-be-less-than-20-characters-long": "La ville doit comporter moins de 20 caractères",
   "city-is-required": "La ville est requise",
-  "you-must-accept-the-terms-and-conditions": "Vous devez accepter les termes et conditions"
+  "you-must-accept-the-terms-and-conditions": "Vous devez accepter les termes et conditions",
+
+  "login-required": "Connexion requise",
+  "you-need-to-log-in-to-access-this-functionality": "Vous devez vous connecter pour accéder à cette fonctionnalité.",
+
+  "less": "Moins",
+  "more": "Plus",
+  "comments": "Commentaires",
+  "reply": "Répondre",
+  "hide-replies": "Masquer les réponses",
+  "view-replies": "Voir les réponses",
+  "no-comments-yet": "Aucun commentaire pour le moment",
+  "replying-to": "En réponse à",
+  "add-a-comment": "Ajouter un commentaire"
 }

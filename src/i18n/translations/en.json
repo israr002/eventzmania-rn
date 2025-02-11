@@ -44,5 +44,18 @@
   "city-must-be-at-least-2-characters-long": "City must be at least 2 characters long",
   "city-must-be-less-than-20-characters-long": "City must be less than 20 characters long",
   "city-is-required": "City is required",
-  "you-must-accept-the-terms-and-conditions": "You must accept the terms and conditions"
+  "you-must-accept-the-terms-and-conditions": "You must accept the terms and conditions",
+
+  "login-required": "Login Required",
+  "you-need-to-log-in-to-access-this-functionality": "You need to log in to access this functionality.",
+
+  "less": "Less",
+  "more": "More",
+  "comments": "Comments",
+  "reply": "Reply",
+  "hide-replies": "Hide Replies",
+  "view-replies": "View Replies",
+  "no-comments-yet": "No Comments yet",
+  "replying-to": "Replying to",
+  "add-a-comment": "Add a comment"
 }

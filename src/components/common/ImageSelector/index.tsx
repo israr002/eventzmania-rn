@@ -81,8 +81,9 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({
           Alert.alert("Information", response.errorMessage);
           return;
         } else if (
-          response.assets &&
-          response.assets[0]?.fileSize > 5 * 1024 * 1024
+          response.assets?.length &&
+          response.assets[0]?.fileSize &&
+          response.assets[0].fileSize > 5 * 1024 * 1024
         ) {
           Alert.alert("Information", "File size should be less than 5 MB");
           return;
@@ -121,19 +122,11 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({
         <View style={styles.modalBackdrop}>
           <View style={styles.modal}>
             <TouchableOpacity onPress={onClose} style={styles.closeIcon}>
-              {/* <Image
-                source={require('../../../assets/images/close.png')}
-                style={styles.closeIcon}
-              /> */}
               <CloseSvg fill={Colors.White} height={15} width={15} />
             </TouchableOpacity>
             <Text style={styles.modalHeadingText}>Select Photo</Text>
             <View style={styles.row}>
               <TouchableOpacity style={styles.iconButton} onPress={openCamera}>
-                {/* <Image
-                  source={require('../../../assets/images/camera.png')}
-                  style={styles.buttonImage}
-                /> */}
                 <View style={styles.buttonImage}>
                   <CameraSvg fill={Colors.Primary} height={20} width={20} />
                 </View>
@@ -141,10 +134,6 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({
                 <Text style={styles.buttonText}>Camera</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.iconButton} onPress={openGallery}>
-                {/* <Image
-                  source={require('../../../assets/images/gallery.png')}
-                  style={styles.buttonImage}
-                /> */}
                 <View style={styles.buttonImage}>
                   <GallerySvg fill={Colors.Primary} height={20} width={20} />
                 </View>

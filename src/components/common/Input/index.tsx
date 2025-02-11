@@ -1,6 +1,6 @@
 import React from "react";
 import { Controller, FieldValues,useFormContext } from "react-hook-form";
-import {  Text, TextInput, View } from "react-native";
+import { Image, Text, TextInput, View } from "react-native";
 import { Colors } from "styles/colors";
 
 import { styles } from "./styles";
