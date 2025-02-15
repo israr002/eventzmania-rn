@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import CommentModal from "components/CommentModal";
-import PostItem from "components/PostItem";
+import FeedCard from "components/FeedCard";
 import { useCheckAuth } from "hooks/useCheckAuth";
 import { useFeed } from "hooks/useFeed";
 import { FeedNavigationProp } from "navigation/HomeStack/types";
@@ -9,7 +9,8 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { Colors } from "styles/colors";
 import { Comment, Post } from "types";
 
-const Feed: React.FC = () => {
+const FeedScreen: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [postList, setPostList] = useState<Post[]>([]);
   const navigation = useNavigation<FeedNavigationProp>();
   const [commentModalOpen, setCommentModalOpen] = useState(false);
@@ -22,7 +23,7 @@ const Feed: React.FC = () => {
     getCommentRepliesMutation,
     likeCommentMutation,
     addCommentMutation,
-    addCommentReplyMutation
+    addCommentReplyMutation,
   } = useFeed();
   const { checkAuth } = useCheckAuth();
 
@@ -32,31 +33,31 @@ const Feed: React.FC = () => {
 
   const getPosts = async () => {
     getFeedMutation.mutate(undefined, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         setPostList(res.data.data);
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
   const onLike = async (item: Post) => {
     const previousPostList = [...postList];
-    const updatedData = postList.map(i =>
+    const updatedData = postList.map((i) =>
       item.id === i.id ? { ...i, liked: !i.liked } : i
     );
     setPostList(updatedData);
     checkAuth(() =>
       likePostMutation.mutate(item.id, {
-        onSuccess: res => {
+        onSuccess: (res) => {
           if (res?.status === 400) {
             setPostList(previousPostList);
           }
         },
-        onError: err => {
+        onError: (err) => {
           console.log("Error occurred:", err);
-        }
+        },
       })
     );
   };
@@ -64,43 +65,43 @@ const Feed: React.FC = () => {
   const getComments = async (item: Post) => {
     setCommentModalOpen(true);
     getCommentsMutation.mutate(item.id, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         setComments(res.data.data);
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
   const getCommentReplies = async (id: number) => {
     getCommentRepliesMutation.mutate(id, {
-      onSuccess: res => {
-        const index = comments.findIndex(i => i.id === id);
+      onSuccess: (res) => {
+        const index = comments.findIndex((i) => i.id === id);
         comments[index].replies = res.data.data;
         setComments([...comments]);
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
   const onLikeComment = async (id: number) => {
     const previousList = [...comments];
-    const index = comments.findIndex(i => i.id === id);
+    const index = comments.findIndex((i) => i.id === id);
     comments[index].liked = !comments[index].liked;
     setComments([...comments]);
     checkAuth(() =>
       likeCommentMutation.mutate(id, {
-        onSuccess: res => {
+        onSuccess: (res) => {
           if (res?.status === 400) {
             setComments(previousList);
           }
         },
-        onError: err => {
+        onError: (err) => {
           console.log("Error occurred:", err);
-        }
+        },
       })
     );
   };
@@ -110,31 +111,31 @@ const Feed: React.FC = () => {
       if (commentId) {
         const commentData = {
           commentId: commentId,
-          comment: comment
+          comment: comment,
         };
         checkAuth(() =>
           addCommentReplyMutation.mutate(commentData, {
-            onSuccess: res => {
+            onSuccess: (res) => {
               getCommentReplies(commentId);
             },
-            onError: err => {
+            onError: (err) => {
               console.log("Error occurred:", err);
-            }
+            },
           })
         );
       } else {
         const commentData = {
           postId: selectedPost?.id as number,
-          comment: comment
+          comment: comment,
         };
         checkAuth(() =>
           addCommentMutation.mutate(commentData, {
-            onSuccess: res => {
+            onSuccess: (res) => {
               getComments(selectedPost as Post);
             },
-            onError: err => {
+            onError: (err) => {
               console.log("Error occurred:", err);
-            }
+            },
           })
         );
       }
@@ -143,18 +144,18 @@ const Feed: React.FC = () => {
     }
   };
 
-  const goToVenue = (id: number) => {
-    navigation.navigate("VenueStack", {
-      screen: "VenueDetails",
-      params: { venueId: id }
-    });
+  const goToRestaurant = (id: number) => {
+    // navigation.navigate("Restaurant", {
+    //   screen: "VenueDetails",
+    //   params: { venueId: id },
+    // });
   };
 
   const goToEvents = (id: number) => {
-    navigation.navigate("VenueStack", {
-      screen: "Events",
-      params: { venueId: id }
-    });
+    // navigation.navigate("VenueStack", {
+    //   screen: "Events",
+    //   params: { venueId: id },
+    // });
   };
 
   return (
@@ -163,15 +164,15 @@ const Feed: React.FC = () => {
         <FlatList
           data={postList}
           renderItem={({ item }) => (
-            <PostItem
+            <FeedCard
               post={item}
               onLike={() => onLike(item)}
               onComment={() => getComments(item)}
-              goToVenue={() => goToVenue(item.venueId)}
-              goToEvents={() => goToEvents(item.venueId)}
+              goToRestaurant={() => goToRestaurant(item.restaurantId)}
+              goToEvents={() => goToEvents(item.restaurantId)}
             />
           )}
-          keyExtractor={item => `${item.id}`}
+          keyExtractor={(item) => `${item.id}`}
           // ListEmptyComponent={<NoData message="No Posts available." />}
         />
       </View>
@@ -192,8 +193,8 @@ const Feed: React.FC = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: Colors.Black,
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
-export default Feed;
+export default FeedScreen;

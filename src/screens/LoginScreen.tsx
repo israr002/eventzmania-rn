@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
-import { SendOtpRequest } from "api/authApi";
 import Button from "components/common/Button";
 import Input from "components/common/Input";
 import { useAuth } from "hooks/useAuth";
@@ -13,29 +12,34 @@ import { StyleSheet, View } from "react-native";
 import { Colors } from "styles/colors";
 import { Metrics } from "styles/metrics";
 
+type LoginFormData = {
+  mobileNo: string;
+};
+
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation<LoginNavigationProp>();
   const { sendOtpMutation } = useAuth();
   const { t } = useTranslation();
   const { loginSchema } = useZodSchema();
 
-  const methods = useForm<SendOtpRequest>({
-    resolver: zodResolver(loginSchema)
+  const methods = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
   });
   const { handleSubmit } = methods;
 
-  const sendOtp: SubmitHandler<SendOtpRequest> = async data => {
+  const sendOtp: SubmitHandler<LoginFormData> = async (data) => {
     sendOtpMutation.mutate(data, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         const { resendTimeInSeconds } = res.data;
-    navigation.navigate("Otp", {
-      resendTimeInSeconds: resendTimeInSeconds,
-      mobileNo: data.mobileNo
-    });
+        console.log("LoginResponse", res.data);
+        navigation.navigate("Otp", {
+          resendTimeInSeconds: resendTimeInSeconds,
+          mobileNo: data.mobileNo,
+        });
       },
-      onError: err => {
+      onError: (err) => {
         console.log("Login failed:", err);
-      }
+      },
     });
   };
 
@@ -58,8 +62,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Black,
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: Metrics.padding.xLarge
-  }
+    paddingHorizontal: Metrics.padding.xLarge,
+  },
 });
 
 export default LoginScreen;

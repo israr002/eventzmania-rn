@@ -5,12 +5,18 @@ import LocationSvg from "assets/images/icons/location.svg";
 import UserSvg from "assets/images/icons/user.svg";
 import Button from "components/common/Button";
 import Checkbox from "components/common/Checkbox";
+import Dropdown from "components/common/Dropdown";
 import ImageSelector from "components/common/ImageSelector";
 import Input from "components/common/Input";
 import { useAuth } from "hooks/useAuth";
 import { useZodSchema } from "hooks/useZodSchema";
-import React, { useState } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import {
+  FormProvider,
+  SubmitHandler,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { Colors } from "styles/colors";
@@ -21,47 +27,88 @@ type SignUpFormData = {
   firstName: string;
   lastName: string;
   email: string;
-  city: string;
+  state: { label: string; value: number };
+  city: { label: string; value: number };
   acceptTerms: boolean;
 };
 
 const SignUpScreen: React.FC = () => {
   const [imageData, setImageData] = useState<ImageData>(null);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
   const navigation = useNavigation();
-  const { signUpMutation } = useAuth();
+  const { signUpMutation, getStatesMutation, getCitiesMutation } = useAuth();
   const { t } = useTranslation();
   const { signUpSchema } = useZodSchema();
 
   const methods = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema)
+    resolver: zodResolver(signUpSchema),
   });
-  const { handleSubmit } = methods;
+  const { handleSubmit, control } = methods;
 
-  const onSubmit: SubmitHandler<SignUpFormData> = async data => {
+  const selectedState = useWatch({
+    control,
+    name: "state",
+  });
+
+  useEffect(() => {
+    getStates();
+  }, []);
+
+  useEffect(() => {
+    if (selectedState) {
+      getCities(selectedState.value);
+    }
+  }, [selectedState]);
+
+  const getStates = async () => {
+    getStatesMutation.mutate(undefined, {
+      onSuccess: (res) => {
+        console.log(res.data);
+        setStates(res.data.map((i) => ({ label: i.name, value: i.id })));
+      },
+      onError: (err) => {
+        console.log("request failed:", err);
+      },
+    });
+  };
+
+  const getCities = async (id: number) => {
+    getCitiesMutation.mutate(id, {
+      onSuccess: (res) => {
+        setCities(res.data.map((i) => ({ label: i.name, value: i.id })));
+      },
+      onError: (err) => {
+        console.log("request failed:", err);
+      },
+    });
+  };
+
+  const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
     const uploadData = new FormData();
     uploadData.append("firstName", data.firstName);
     uploadData.append("lastName", data.lastName);
     uploadData.append("email", data.email);
-    uploadData.append("city", data.city);
+    uploadData.append("cityId", data.city.value);
     uploadData.append(
       "profileImage",
       imageData.fileName
         ? {
             type: imageData.type,
             uri: imageData.uri,
-            name: imageData.fileName
+            name: imageData.fileName,
           }
         : ""
     );
     signUpMutation.mutate(uploadData, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         console.log("Registration successful:", res);
         //navigation.navigate("SignUp");
       },
-      onError: err => {
+      onError: (err) => {
         console.log("Login failed:", err);
-      }
+      },
     });
   };
 
@@ -85,11 +132,21 @@ const SignUpScreen: React.FC = () => {
           placeholder={t("email-id")}
           icon={<EmailSvg fill={Colors.White} width={20} height={20} />}
         />
-        <Input
+
+        <Dropdown
+          name="state"
+          placeholder={t("state")}
+          icon={<LocationSvg fill={Colors.White} width={20} height={20} />}
+          items={states}
+        />
+
+        <Dropdown
           name="city"
           placeholder={t("city")}
           icon={<LocationSvg fill={Colors.White} width={20} height={20} />}
+          items={cities}
         />
+
         <Checkbox
           name="acceptTerms"
           label={t("i-accept-the-terms-and-conditions")}
@@ -105,8 +162,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Black,
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: Metrics.padding.xLarge
-  }
+    paddingHorizontal: Metrics.padding.xLarge,
+  },
 });
 
 export default SignUpScreen;

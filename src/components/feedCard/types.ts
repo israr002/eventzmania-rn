@@ -1,9 +1,9 @@
 import { Post } from "types";
 
-export type FeedCardProps = {
+export interface FeedCardProps {
   post: Post;
   onLike: () => void;
   onComment: () => void;
-  goToVenue: () => void;
+  goToRestaurant: () => void;
   goToEvents?: () => void;
 }

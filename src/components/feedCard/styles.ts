@@ -9,62 +9,62 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.Primary,
     flexDirection: "row",
-    paddingVertical: Metrics.padding.xTiny
+    paddingVertical: Metrics.padding.xTiny,
   },
   bookingLinkIcon: {
     height: Metrics.xxSmall,
     marginHorizontal: Metrics.margin.tiny,
     tintColor: Colors.White,
-    width: Metrics.xxSmall
+    width: Metrics.xxSmall,
   },
   bookingLinkText: {
     color: Colors.White,
     flex: 1,
-    marginLeft: Metrics.margin.tiny
+    marginLeft: Metrics.margin.tiny,
   },
   descriptionContainer: {
     flex: 1,
-    marginHorizontal: Metrics.margin.tiny
+    marginHorizontal: Metrics.margin.tiny,
   },
   detailsRow: {
     alignItems: "center",
     flexDirection: "row",
     marginHorizontal: Metrics.margin.tiny,
-    marginVertical: Metrics.margin.tiny
+    marginVertical: Metrics.margin.tiny,
   },
   headingText: {
     color: Colors.White,
     flex: 1,
     fontSize: Metrics.small,
-    fontWeight: "700"
+    fontWeight: "700",
   },
   icon: {
-    marginHorizontal: Metrics.margin.tiny
+    marginHorizontal: Metrics.margin.tiny,
   },
   image: {
     height: screenWidth,
-    width: "100%"
+    width: "100%",
   },
   linkText: {
     color: Colors.Primary,
-    fontSize: Metrics.xSmall
+    fontSize: Metrics.xxSmall,
   },
   mainContainer: {
-    marginVertical: Metrics.margin.tiny
+    marginVertical: Metrics.margin.tiny,
   },
   subText: {
     color: Colors.Grey,
-    fontSize: Metrics.xSmall
+    fontSize: Metrics.xxSmall,
   },
   text: {
     color: Colors.White,
     fontSize: Metrics.xSmall,
-    fontWeight: "400"
+    fontWeight: "400",
   },
-  venueProfileImage: {
+  profileImage: {
     borderRadius: Metrics.radius.large,
     height: Metrics.large,
     marginRight: Metrics.margin.xSmall,
-    width: Metrics.large
-  }
+    width: Metrics.large,
+  },
 });

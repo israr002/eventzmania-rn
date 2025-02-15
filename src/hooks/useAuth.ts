@@ -1,18 +1,50 @@
 import { useMutation } from "@tanstack/react-query";
-import { sendOtp, signUp, verifyOtp } from "api/authApi";
+import {
+  getCities,
+  getProfile,
+  getStates,
+  sendOtp,
+  signUp,
+  updateCurrentLocation,
+  verifyOtp,
+} from "api/authApi";
 
 export const useAuth = () => {
   const sendOtpMutation = useMutation({
-    mutationFn: sendOtp
+    mutationFn: sendOtp,
   });
 
   const verifyOtpMutation = useMutation({
-    mutationFn: verifyOtp
+    mutationFn: verifyOtp,
   });
 
   const signUpMutation = useMutation({
-    mutationFn: signUp
+    mutationFn: signUp,
   });
 
-  return { sendOtpMutation, verifyOtpMutation, signUpMutation };
+  const getStatesMutation = useMutation({
+    mutationFn: getStates,
+  });
+
+  const getCitiesMutation = useMutation({
+    mutationFn: getCities,
+  });
+
+  const updateLocationMutation = useMutation({
+    mutationFn: updateCurrentLocation,
+  });
+
+  const getProfileMutation = useMutation({
+    mutationFn: getProfile,
+  });
+
+  return {
+    sendOtpMutation,
+    verifyOtpMutation,
+    signUpMutation,
+    getStatesMutation,
+    getCitiesMutation,
+    updateLocationMutation,
+    getProfileMutation,
+  };
 };

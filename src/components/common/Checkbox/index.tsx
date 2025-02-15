@@ -1,6 +1,6 @@
 import CheckSvg from "assets/images/icons/check.svg";
 import React from "react";
-import { Controller, FieldValues,useFormContext } from "react-hook-form";
+import { Controller, FieldValues, useFormContext } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Colors } from "styles/colors";
 
@@ -11,10 +11,10 @@ const Checkbox: React.FC<CheckboxProps> = ({
   name,
   rules,
   defaultValue = false,
-  label
+  label,
 }) => {
   const {
-    formState: { errors }
+    formState: { errors },
   } = useFormContext<FieldValues>();
 
   return (

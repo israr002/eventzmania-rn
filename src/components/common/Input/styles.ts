@@ -4,21 +4,22 @@ import { Metrics } from "styles/metrics";
 
 export const styles = StyleSheet.create({
   container: {
-    marginVertical: Metrics.margin.tiny
+    marginVertical: Metrics.margin.tiny,
   },
   error: {
     color: Colors.Red,
     fontSize: Metrics.xxSmall,
-    marginTop: Metrics.margin.xTiny
+    marginTop: Metrics.margin.xTiny,
   },
   icon: {
-    marginRight: Metrics.margin.tiny
+    //marginRight: Metrics.margin.tiny,
   },
   input: {
     color: Colors.White,
     flex: 1,
     height: Metrics.xLarge,
-    paddingVertical: 0
+    paddingVertical: 0,
+    paddingHorizontal: Metrics.margin.xxSmall,
   },
   inputContainer: {
     alignItems: "center",
@@ -26,6 +27,6 @@ export const styles = StyleSheet.create({
     borderRadius: Metrics.radius.tiny,
     borderWidth: 1,
     flexDirection: "row",
-    paddingHorizontal: Metrics.padding.small
-  }
+    paddingHorizontal: Metrics.padding.small,
+  },
 });

@@ -29,6 +29,7 @@
   "first-name": "First Name",
   "last-name": "Last Name",
   "email-id": "Email Id",
+  "state": "State",
   "city": "City",
   "i-accept-the-terms-and-conditions": "I accept the terms and conditions",
   "register": "Register",
@@ -41,8 +42,7 @@
   "invalid-email-address": "Invalid email address",
   "email-must-be-less-than-30-characters-long": "Email must be less than 30 characters long",
   "email-is-required": "Email is required",
-  "city-must-be-at-least-2-characters-long": "City must be at least 2 characters long",
-  "city-must-be-less-than-20-characters-long": "City must be less than 20 characters long",
+  "state-is-required": "State is required",
   "city-is-required": "City is required",
   "you-must-accept-the-terms-and-conditions": "You must accept the terms and conditions",
 
@@ -57,5 +57,19 @@
   "view-replies": "View Replies",
   "no-comments-yet": "No Comments yet",
   "replying-to": "Replying to",
-  "add-a-comment": "Add a comment"
+  "add-a-comment": "Add a comment",
+
+  "dining-capacity": "Dining Capacity",
+  "banquet-capacity": "Banquet Capacity",
+  "todays-Event": "Today's Event",
+  "no-restaurants-available": "No Restaurants Available",
+
+  "buy-tickets": "Buy Tickets",
+  "no-events-available": "No Events Available",
+
+  "edit-profile": "Edit Profile",
+  "logout": "Logout",
+  "are-you-sure-you-want-to-logout": "Are you Sure, you want to logout?",
+  "no": "No",
+  "yes": "Yes"
 }

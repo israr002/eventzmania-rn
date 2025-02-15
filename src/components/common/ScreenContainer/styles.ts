@@ -1,18 +1,18 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet} from 'react-native';
 
-import {Colors} from "../../../styles/colors";
+import {Colors} from '../../../styles/colors';
 
 export const styles = StyleSheet.create({
-  childContainer: {
-    flex: 1
-    //marginTop: StatusBar.currentHeight,
+  mainContainer: {
+    flex: 1,
+    backgroundColor: Colors.Black,
   },
   loaderContainer: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: 'center',
   },
-  mainContainer: {
-    backgroundColor: Colors.Black,
-    flex: 1
-  }
+  childContainer: {
+    flex: 1,
+    //marginTop: StatusBar.currentHeight,
+  },
 });

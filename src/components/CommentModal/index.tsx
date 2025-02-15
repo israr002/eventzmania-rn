@@ -11,13 +11,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { Colors } from "styles/colors";
 import { Comment } from "types";
 
 import { styles } from "./styles";
 import { CommentModalProps } from "./types";
+import { useTranslation } from "react-i18next";
 
 const CommentModal: React.FC<CommentModalProps> = ({
   visible,
@@ -25,7 +26,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   comments,
   onLikeComment,
   getReplies,
-  addComment
+  addComment,
 }) => {
   const [comment, setComment] = useState<string>("");
   const [selectedCommentIdToViewReplies, setSelectedCommentIdToViewReplies] =
@@ -33,6 +34,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   const [selectedCommentToReply, setSelectedCommentToReply] = useState<
     Comment | undefined
   >();
+  const { t } = useTranslation();
 
   const closeModal = () => {
     onClose();
@@ -43,7 +45,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
 
   const onViewReplies = (id: number) => {
     setSelectedCommentIdToViewReplies(id);
-    const index = comments.findIndex(i => i.id === id);
+    const index = comments.findIndex((i) => i.id === id);
     if (!comments[index].replies) {
       getReplies(id);
     }
@@ -74,11 +76,11 @@ const CommentModal: React.FC<CommentModalProps> = ({
           <TouchableOpacity onPress={closeModal}>
             <View style={styles.horizontalLine} />
           </TouchableOpacity>
-          <Text style={styles.modalHeadingText}>Comments</Text>
+          <Text style={styles.modalHeadingText}>{t("comments")}</Text>
           <View style={styles.modalContent}>
             {comments.length > 0 ? (
               <>
-                {comments?.map(i => (
+                {comments?.map((i) => (
                   <View>
                     <View style={styles.commentContainer}>
                       <Image
@@ -96,14 +98,14 @@ const CommentModal: React.FC<CommentModalProps> = ({
                         <TouchableOpacity
                           onPress={() => setSelectedCommentToReply(i)}
                         >
-                          <Text style={styles.timeText}>Reply</Text>
+                          <Text style={styles.timeText}>{t("reply")}</Text>
                         </TouchableOpacity>
                         <View style={styles.replyContainer}>
                           {i.replyCount && (
                             <>
                               {i.id === selectedCommentIdToViewReplies ? (
                                 <View>
-                                  {i.replies?.map(j => (
+                                  {i.replies?.map((j) => (
                                     <View style={styles.commentContainer}>
                                       <Image
                                         source={{ uri: j.profilePicture }}
@@ -126,7 +128,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                                   ))}
                                   <TouchableOpacity onPress={onHideReplies}>
                                     <Text style={styles.timeText}>
-                                      Hide Replies
+                                      {t("hide-replies")}
                                     </Text>
                                   </TouchableOpacity>
                                 </View>
@@ -135,7 +137,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                                   onPress={() => onViewReplies(i.id)}
                                 >
                                   <Text style={styles.timeText}>
-                                    View Replies
+                                    {t("view-replies")}
                                   </Text>
                                 </TouchableOpacity>
                               )}
@@ -162,13 +164,13 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 ))}
               </>
             ) : (
-              <Text style={styles.noCommentText}>No Comments yet</Text>
+              <Text style={styles.noCommentText}>{t("no-comments-yet")}</Text>
             )}
           </View>
           {selectedCommentToReply && (
             <View style={styles.replyBar}>
               <Text style={styles.timeText}>
-                Replying to {selectedCommentToReply.username}
+                {t("replying-to")} {selectedCommentToReply.username}
               </Text>
               <TouchableOpacity
                 onPress={() => setSelectedCommentToReply(undefined)}
@@ -179,11 +181,11 @@ const CommentModal: React.FC<CommentModalProps> = ({
           )}
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Add a comment"
+              placeholder={t("add-a-comment")}
               placeholderTextColor={Colors.Grey}
               style={styles.input}
               value={comment}
-              onChangeText={text => setComment(text)}
+              onChangeText={(text) => setComment(text)}
             />
             {comment.length > 0 && (
               <TouchableOpacity onPress={addNewComment} style={styles.sendIcon}>

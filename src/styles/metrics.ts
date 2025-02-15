@@ -1,4 +1,4 @@
-import {moderateScale} from "utils/scaleUnits";
+import { moderateScale } from "utils/scaleUnits";
 
 export const Metrics = {
   xTiny: moderateScale(5),
@@ -19,7 +19,7 @@ export const Metrics = {
     medium: moderateScale(20),
     base: moderateScale(24),
     large: moderateScale(32),
-    xLarge: moderateScale(40)
+    xLarge: moderateScale(40),
   },
   margin: {
     xTiny: moderateScale(5),
@@ -30,7 +30,7 @@ export const Metrics = {
     medium: moderateScale(20),
     base: moderateScale(24),
     large: moderateScale(32),
-    xLarge: moderateScale(40)
+    xLarge: moderateScale(40),
   },
   radius: {
     tiny: moderateScale(5),
@@ -38,6 +38,6 @@ export const Metrics = {
     base: moderateScale(12),
     medium: moderateScale(16),
     large: moderateScale(24),
-    xLarge: moderateScale(32)
-  }
+    xLarge: moderateScale(32),
+  },
 };

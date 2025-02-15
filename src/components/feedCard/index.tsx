@@ -3,23 +3,23 @@ import LikeSvg from "assets/images/icons/like.svg";
 import LikedSvg from "assets/images/icons/liked.svg";
 import ImageSlider from "components/ImageSlider";
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import {
   Gesture,
   GestureDetector,
-  GestureHandlerRootView
+  GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
   useSharedValue,
   withDelay,
-  withTiming
+  withTiming,
 } from "react-native-reanimated";
 import { Colors } from "styles/colors";
 
 import { styles } from "./styles";
-import { PostItemProps } from "./types";
+import { FeedCardProps } from "./types";
+import { useTranslation } from "react-i18next";
 
 export const screenWidth = Dimensions.get("screen").width;
 
@@ -27,8 +27,8 @@ const FeedCard: React.FC<FeedCardProps> = ({
   post,
   onLike,
   onComment,
-  goToVenue,
-  goToEvents
+  goToRestaurant,
+  goToEvents,
 }) => {
   const [seeMore, setSeeMore] = useState<boolean>(false);
   const opacity = useSharedValue<number>(0);
@@ -41,7 +41,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
       opacity.value = 1;
       opacity.value = withDelay(
         500,
-        withTiming(0, { duration: 500 }, isFinished => {
+        withTiming(0, { duration: 500 }, (isFinished) => {
           if (isFinished) {
             runOnJS(onLike)();
           }
@@ -51,12 +51,12 @@ const FeedCard: React.FC<FeedCardProps> = ({
 
   return (
     <View style={styles.mainContainer}>
-      <TouchableOpacity style={styles.detailsRow} onPress={goToVenue}>
+      <TouchableOpacity style={styles.detailsRow} onPress={goToRestaurant}>
         <Image
           source={{ uri: post.profilePicture }}
-          style={styles.venueProfileImage}
+          style={styles.profileImage}
         />
-        <Text style={styles.headingText}>{post.venueName}</Text>
+        <Text style={styles.headingText}>{post.restaurantName}</Text>
       </TouchableOpacity>
 
       <GestureHandlerRootView>

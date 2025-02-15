@@ -22,7 +22,6 @@ export const apiCallService = async (
       url,
       data: body
     };
-
     const response = await api.request(config);
     return response.data;
   } catch (error) {

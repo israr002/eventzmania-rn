@@ -3,7 +3,7 @@ export type Amenity = {
   id: number;
   value: string;
 };
-export type Venue = {
+export type Restaurant = {
   id: number;
   profileImage: string;
   description: string;
@@ -18,6 +18,8 @@ export type Venue = {
   eventStartTime: string;
   eventEndTime: string;
   totalCapacity: number;
+  banquetCapacity: number;
+  diningCapacity: number;
 };
 
 export type ImageData = {
@@ -60,13 +62,13 @@ export type Post = {
   title: string;
   description: string;
   createdAt: Date;
-  venueName: string;
+  restaurantName: string;
   profilePicture: string;
   media: string[];
   likeCount: number;
   commentCount: number;
   liked: boolean;
-  venueId: number;
+  restaurantId: number;
   eventsAvailable: boolean;
 };
 
@@ -82,7 +84,7 @@ export type Comment = {
   replies?: Comment[];
 };
 
-export type VenueEvent = {
+export type EventDetails = {
   id: number;
   date: Date;
   startTime: string;
@@ -91,9 +93,10 @@ export type VenueEvent = {
   description: string;
   ticketPrice: number;
   maxLimit: number;
-  venueId: number;
-  venueName: string;
-  venueAddress: string;
+  image: string;
+  restaurantId: number;
+  restaurantName: string;
+  restaurantAddress: string;
 };
 
 export type dropdownItem = {

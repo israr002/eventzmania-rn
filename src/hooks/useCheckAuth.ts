@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 
-export const useAuthCheck = () => {
+export const useCheckAuth = () => {
   const { t } = useTranslation();
 
   const checkAuth = async (callback: () => void) => {
@@ -12,7 +12,7 @@ export const useAuthCheck = () => {
         callback();
       } else {
         Alert.alert(
-          t("login-required\""),
+          t('login-required"'),
           t("you-need-to-log-in-to-access-this-functionality")
         );
       }

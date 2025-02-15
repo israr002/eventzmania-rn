@@ -29,9 +29,10 @@
   "first-name": "Prénom",
   "last-name": "Nom de famille",
   "email-id": "Adresse e-mail",
+  "state": "État",
   "city": "Ville",
-  "register": "Registre",
   "i-accept-the-terms-and-conditions": "J'accepte les termes et conditions",
+  "register": "Registre",
   "first-name-must-be-at-least-2-characters-long": "Le prénom doit comporter au moins 2 caractères",
   "first-name-must-be-less-than-20-characters-long": "Le prénom doit comporter moins de 20 caractères",
   "first-name-is-required": "Le prénom est requis",
@@ -41,8 +42,7 @@
   "invalid-email-address": "Adresse e-mail invalide",
   "email-must-be-less-than-30-characters-long": "L'email doit comporter moins de 30 caractères",
   "email-is-required": "L'e-mail est requis",
-  "city-must-be-at-least-2-characters-long": "La ville doit comporter au moins 2 caractères",
-  "city-must-be-less-than-20-characters-long": "La ville doit comporter moins de 20 caractères",
+  "state-is-required": "L'état est requis",
   "city-is-required": "La ville est requise",
   "you-must-accept-the-terms-and-conditions": "Vous devez accepter les termes et conditions",
 
@@ -57,5 +57,19 @@
   "view-replies": "Voir les réponses",
   "no-comments-yet": "Aucun commentaire pour le moment",
   "replying-to": "En réponse à",
-  "add-a-comment": "Ajouter un commentaire"
+  "add-a-comment": "Ajouter un commentaire",
+
+  "dining-capacity": "Capacité de restauration",
+  "banquet-capacity": "Capacité de banquet",
+  "todays-Event": "Événement d'aujourd'hui",
+  "no-restaurants-available": "Aucun restaurant disponible",
+
+  "buy-tickets": "Acheter des billets",
+  "no-events-available": "Aucun événement disponible",
+
+  "edit-profile": "Modifier le profil",
+  "logout": "Se déconnecter",
+  "are-you-sure-you-want-to-logout": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "no": "Non",
+  "yes": "Oui"
 }
