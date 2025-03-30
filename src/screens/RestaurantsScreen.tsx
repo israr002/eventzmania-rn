@@ -9,18 +9,18 @@ import { useAuth } from "hooks/useAuth";
 import { useRestaurants } from "hooks/useRestaurants";
 import { Colors } from "styles/colors";
 import RestaurantCard from "components/RestaurantCard";
-import { RestaurantsNavigationProp } from "navigation/HomeStack/types";
 import NoData from "components/common/NoData";
 import SearchBar from "components/common/SearchBar";
 import { useTranslation } from "react-i18next";
+import { AppNavigationProp } from "navigation/AppNavigator/types";
+import Loader from "components/common/Loader";
 
 const RestaurantsScreen: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [searchString, setSearchString] = useState<string>("");
   const [latitude, setLatitude] = useState<number>();
   const [longitude, setLongitude] = useState<number>();
-  const navigation = useNavigation<RestaurantsNavigationProp>();
+  const navigation = useNavigation<AppNavigationProp>();
   const { updateLocationMutation } = useAuth();
   const { getNearestRestaurantsMutation } = useRestaurants();
   const { t } = useTranslation();
@@ -91,20 +91,26 @@ const RestaurantsScreen: React.FC = () => {
   };
 
   const navigateToDetails = (item: Restaurant) => {
-    //navigation.navigate("RestaurantDetails", { venueId: item.id });
+    navigation.navigate("RestaurantDetails", { restaurantId: item.id });
   };
 
   return (
     <View style={styles.mainContainer}>
       <SearchBar value={searchString} onChangeText={setSearchString} />
-      <FlatList
-        data={restaurants}
-        renderItem={({ item }) => (
-          <RestaurantCard restaurant={item} onPress={navigateToDetails} />
-        )}
-        keyExtractor={(item) => `${item.id}`}
-        ListEmptyComponent={<NoData message={t("no-restaurants-available")} />}
-      />
+      {getNearestRestaurantsMutation.isPending ? (
+        <Loader />
+      ) : (
+        <FlatList
+          data={restaurants}
+          renderItem={({ item }) => (
+            <RestaurantCard restaurant={item} onPress={navigateToDetails} />
+          )}
+          keyExtractor={(item) => `${item.id}`}
+          ListEmptyComponent={
+            <NoData message={t("no-restaurants-available")} />
+          }
+        />
+      )}
     </View>
   );
 };

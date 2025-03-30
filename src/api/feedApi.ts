@@ -32,7 +32,6 @@ export type AddCommentRequest = {
   postId: number;
   comment: string;
 };
-
 export const addComment = async (data: AddCommentRequest) => {
   return apiCallService("POST", API_ENDPOINTS.ADD_COMMENT, data);
 };
@@ -41,7 +40,6 @@ export type AddCommentReplyRequest = {
   commentId: number;
   comment: string;
 };
-
 export const addCommentReply = async (data: AddCommentReplyRequest) => {
   return apiCallService("POST", API_ENDPOINTS.ADD_COMMENT_REPLY, data);
 };

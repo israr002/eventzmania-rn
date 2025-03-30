@@ -21,14 +21,6 @@ export const signUp = async (data: FormData) => {
   return apiCallService("POST", API_ENDPOINTS.SIGNUP, data);
 };
 
-export const getStates = async () => {
-  return apiCallService("GET", API_ENDPOINTS.GET_STATES);
-};
-
-export const getCities = async (data: number) => {
-  return apiCallService("GET", `${API_ENDPOINTS.GET_CITIES}?stateId=${data}`);
-};
-
 export type UpdateLocationRequest = {
   latitude: number;
   longitude: number;
@@ -39,4 +31,8 @@ export const updateCurrentLocation = async (data: UpdateLocationRequest) => {
 
 export const getProfile = async () => {
   return apiCallService("GET", `${API_ENDPOINTS.GET_PROFILE}`);
+};
+
+export const editProfile = async (data: FormData) => {
+  return apiCallService("POST", API_ENDPOINTS.EDIT_PROFILE, data);
 };

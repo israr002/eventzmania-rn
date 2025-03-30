@@ -8,9 +8,16 @@ import { EventCardProps } from "./types";
 import moment from "moment";
 import { formatTime } from "utils/commonUtils";
 import { useTranslation } from "react-i18next";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigationProp } from "navigation/AppNavigator/types";
 
 const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
   const { t } = useTranslation();
+  const navigation = useNavigation<AppNavigationProp>();
+
+  const bookTicket = () => {
+    navigation.navigate("BookTicket", { event });
+  };
 
   return (
     <TouchableOpacity onPress={() => onPress(event)} style={styles.container}>
@@ -39,7 +46,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
         <Text style={styles.text} numberOfLines={2}>
           {event.description}
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={bookTicket}>
           <Text style={styles.linkText}>{t("buy-tickets")}</Text>
         </TouchableOpacity>
       </View>

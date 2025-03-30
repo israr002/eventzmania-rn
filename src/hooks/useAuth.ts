@@ -1,8 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import {
-  getCities,
+  editProfile,
   getProfile,
-  getStates,
   sendOtp,
   signUp,
   updateCurrentLocation,
@@ -22,14 +21,6 @@ export const useAuth = () => {
     mutationFn: signUp,
   });
 
-  const getStatesMutation = useMutation({
-    mutationFn: getStates,
-  });
-
-  const getCitiesMutation = useMutation({
-    mutationFn: getCities,
-  });
-
   const updateLocationMutation = useMutation({
     mutationFn: updateCurrentLocation,
   });
@@ -38,13 +29,16 @@ export const useAuth = () => {
     mutationFn: getProfile,
   });
 
+  const editProfileMutation = useMutation({
+    mutationFn: editProfile,
+  });
+
   return {
     sendOtpMutation,
     verifyOtpMutation,
     signUpMutation,
-    getStatesMutation,
-    getCitiesMutation,
     updateLocationMutation,
     getProfileMutation,
+    editProfileMutation,
   };
 };

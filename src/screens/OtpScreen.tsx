@@ -1,9 +1,7 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { VerifyOtpRequest } from "api/authApi";
-// import { VerifyOtpNavigationProp, VerifyOtpRouteProp } from 'navigators/AuthStack/types';
 import Button from "components/common/Button";
 import { useAuth } from "hooks/useAuth";
-import { OtpNavigationProp, OtpRouteProp } from "navigation/AuthStack/types";
 import React, { useEffect, useRef, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -13,19 +11,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuthStore } from "hooks/useAuthStore";
+import {
+  AppNavigationProp,
+  AppStackParamList,
+} from "navigation/AppNavigator/types";
 
 type OtpFormData = {
   otp: string;
 };
 
 const OtpScreen: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const route = useRoute<OtpRouteProp>();
-  const navigation = useNavigation<OtpNavigationProp>();
-  const { mobileNo, resendTimeInSeconds } = route?.params;
+  const navigation = useNavigation<AppNavigationProp>();
+  const route = useRoute<RouteProp<AppStackParamList, "Otp">>();
+  const { mobileNo, resendTimeInSeconds, isRegistered } = route?.params;
   const { verifyOtpMutation, sendOtpMutation } = useAuth();
-  //const { signIn } = useContext(AuthContext);
+  const { setLoggedIn } = useAuthStore();
+  //const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const methods = useForm<OtpFormData>();
   const { handleSubmit } = methods;
@@ -72,7 +74,7 @@ const OtpScreen: React.FC = () => {
     }
   };
 
-  const verifyOtp: SubmitHandler<OtpFormData> = async (data) => {
+  const verifyOtp: SubmitHandler<OtpFormData> = async () => {
     const requestData: VerifyOtpRequest = {
       mobileNo: mobileNo,
       otp: otp.join(""),
@@ -81,12 +83,11 @@ const OtpScreen: React.FC = () => {
       onSuccess: async (res) => {
         console.log("verification successful:", res);
         if (res) {
-          if (res?.data?.isRegistered !== 1) {
-            //await signIn(res?.data?.accessToken, res?.data?.refreshToken, "0");
+          if (!isRegistered) {
             navigation.navigate("SignUp");
           } else {
-            await AsyncStorage.setItem("accessToken", res?.data?.accessToken);
-            //await signIn(res?.data?.accessToken, res?.data?.refreshToken, "1");
+            setLoggedIn(true, res?.data?.accessToken, res?.data?.refreshToken);
+            navigation.navigate("Tabs", { screen: "Home" });
           }
         }
       },

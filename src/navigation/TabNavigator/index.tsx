@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Feed from "screens/FeedScreen";
 import { Colors } from "styles/colors";
 
-import { HomeStackParamList } from "./types";
 import RestaurantsScreen from "screens/RestaurantsScreen";
 import EventsScreen from "screens/EventsScreen";
 import ProfileScreen from "screens/ProfileScreen";
@@ -13,14 +12,18 @@ import HomeSvg from "assets/images/icons/home.svg";
 import RestaurantSvg from "assets/images/icons/restaurants.svg";
 import EventsSvg from "assets/images/icons/events.svg";
 import ProfileSvg from "assets/images/icons/profile.svg";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { TabBarParamList } from "./types";
+import { AppStackParamList } from "navigation/AppNavigator/types";
 
-//const Stack = createNativeStackNavigator<HomeStackParamList>();
-const Tab = createBottomTabNavigator<HomeStackParamList>();
+const Tab = createBottomTabNavigator<TabBarParamList>();
 
-const HomeStack: React.FC = () => {
+const TabNavigator: React.FC = () => {
+  const route = useRoute<RouteProp<AppStackParamList, "Tabs">>();
+
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName={route.params ? route.params.screen : "Home"}
       screenOptions={{
         headerTitleAlign: "center",
         headerTintColor: Colors.White,
@@ -65,15 +68,15 @@ const HomeStack: React.FC = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <ProfileSvg height={size} width={size} fill={color} />
           ),
         }}
+        component={ProfileScreen}
       />
     </Tab.Navigator>
   );
 };
 
-export default HomeStack;
+export default TabNavigator;

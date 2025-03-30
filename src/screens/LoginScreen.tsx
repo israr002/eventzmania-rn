@@ -4,7 +4,7 @@ import Button from "components/common/Button";
 import Input from "components/common/Input";
 import { useAuth } from "hooks/useAuth";
 import { useZodSchema } from "hooks/useZodSchema";
-import { LoginNavigationProp } from "navigation/AuthStack/types";
+import { AppNavigationProp } from "navigation/AppNavigator/types";
 import React from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,7 +17,7 @@ type LoginFormData = {
 };
 
 const LoginScreen: React.FC = () => {
-  const navigation = useNavigation<LoginNavigationProp>();
+  const navigation = useNavigation<AppNavigationProp>();
   const { sendOtpMutation } = useAuth();
   const { t } = useTranslation();
   const { loginSchema } = useZodSchema();
@@ -28,13 +28,15 @@ const LoginScreen: React.FC = () => {
   const { handleSubmit } = methods;
 
   const sendOtp: SubmitHandler<LoginFormData> = async (data) => {
+    console.log({ data });
     sendOtpMutation.mutate(data, {
       onSuccess: (res) => {
-        const { resendTimeInSeconds } = res.data;
+        const { resendTimeInSeconds, isRegistered } = res.data;
         console.log("LoginResponse", res.data);
         navigation.navigate("Otp", {
-          resendTimeInSeconds: resendTimeInSeconds,
+          resendTimeInSeconds,
           mobileNo: data.mobileNo,
+          isRegistered,
         });
       },
       onError: (err) => {

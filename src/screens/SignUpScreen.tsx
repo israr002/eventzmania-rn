@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigation } from "@react-navigation/native";
 import EmailSvg from "assets/images/icons/email.svg";
 import LocationSvg from "assets/images/icons/location.svg";
 import UserSvg from "assets/images/icons/user.svg";
@@ -9,6 +8,8 @@ import Dropdown from "components/common/Dropdown";
 import ImageSelector from "components/common/ImageSelector";
 import Input from "components/common/Input";
 import { useAuth } from "hooks/useAuth";
+import { useAuthStore } from "hooks/useAuthStore";
+import { useDropdown } from "hooks/useDropdown";
 import { useZodSchema } from "hooks/useZodSchema";
 import React, { useEffect, useState } from "react";
 import {
@@ -36,11 +37,12 @@ const SignUpScreen: React.FC = () => {
   const [imageData, setImageData] = useState<ImageData>(null);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-
-  const navigation = useNavigation();
-  const { signUpMutation, getStatesMutation, getCitiesMutation } = useAuth();
+  const { signUpMutation } = useAuth();
+  const { getStatesMutation, getCitiesMutation } = useDropdown();
   const { t } = useTranslation();
   const { signUpSchema } = useZodSchema();
+  const { setLoggedIn } = useAuthStore();
+  //const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const methods = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -102,9 +104,9 @@ const SignUpScreen: React.FC = () => {
         : ""
     );
     signUpMutation.mutate(uploadData, {
-      onSuccess: (res) => {
-        console.log("Registration successful:", res);
-        //navigation.navigate("SignUp");
+      onSuccess: async (res) => {
+        setLoggedIn(true, res?.data?.accessToken, res?.data?.refreshToken);
+        naviga;
       },
       onError: (err) => {
         console.log("Login failed:", err);

@@ -1,7 +1,6 @@
+import api from "./index";
 import NetInfo from "@react-native-community/netinfo";
 import { Alert } from "react-native";
-
-import api from "./index";
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
@@ -20,7 +19,7 @@ export const apiCallService = async (
     const config = {
       method: methodType,
       url,
-      data: body
+      data: body,
     };
     const response = await api.request(config);
     return response.data;

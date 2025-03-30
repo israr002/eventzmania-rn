@@ -19,6 +19,7 @@ import { Comment } from "types";
 import { styles } from "./styles";
 import { CommentModalProps } from "./types";
 import { useTranslation } from "react-i18next";
+import Loader from "components/common/Loader";
 
 const CommentModal: React.FC<CommentModalProps> = ({
   visible,
@@ -27,6 +28,8 @@ const CommentModal: React.FC<CommentModalProps> = ({
   onLikeComment,
   getReplies,
   addComment,
+  commentsLoading,
+  repliesLoading,
 }) => {
   const [comment, setComment] = useState<string>("");
   const [selectedCommentIdToViewReplies, setSelectedCommentIdToViewReplies] =
@@ -64,6 +67,8 @@ const CommentModal: React.FC<CommentModalProps> = ({
     }
   };
 
+  console.log("comments", comments);
+
   return (
     <Modal
       animationType="slide"
@@ -78,7 +83,9 @@ const CommentModal: React.FC<CommentModalProps> = ({
           </TouchableOpacity>
           <Text style={styles.modalHeadingText}>{t("comments")}</Text>
           <View style={styles.modalContent}>
-            {comments.length > 0 ? (
+            {commentsLoading ? (
+              <Loader />
+            ) : comments.length > 0 ? (
               <>
                 {comments?.map((i) => (
                   <View>
@@ -104,34 +111,42 @@ const CommentModal: React.FC<CommentModalProps> = ({
                           {i.replyCount && (
                             <>
                               {i.id === selectedCommentIdToViewReplies ? (
-                                <View>
-                                  {i.replies?.map((j) => (
-                                    <View style={styles.commentContainer}>
-                                      <Image
-                                        source={{ uri: j.profilePicture }}
-                                        style={styles.userImage}
-                                      />
-                                      <View style={styles.commentSubContainer}>
-                                        <View style={styles.usernameContainer}>
-                                          <Text style={styles.usernameText}>
-                                            {j.username}
-                                          </Text>
-                                          <Text style={styles.timeText}>
-                                            {moment(j.createdAt).fromNow()}
+                                repliesLoading ? (
+                                  <Loader />
+                                ) : (
+                                  <View>
+                                    {i.replies?.map((j) => (
+                                      <View style={styles.commentContainer}>
+                                        <Image
+                                          source={{ uri: j.profilePicture }}
+                                          style={styles.userImage}
+                                        />
+                                        <View
+                                          style={styles.commentSubContainer}
+                                        >
+                                          <View
+                                            style={styles.usernameContainer}
+                                          >
+                                            <Text style={styles.usernameText}>
+                                              {j.username}
+                                            </Text>
+                                            <Text style={styles.timeText}>
+                                              {moment(j.createdAt).fromNow()}
+                                            </Text>
+                                          </View>
+                                          <Text style={styles.commentText}>
+                                            {j.comment}
                                           </Text>
                                         </View>
-                                        <Text style={styles.commentText}>
-                                          {j.comment}
-                                        </Text>
                                       </View>
-                                    </View>
-                                  ))}
-                                  <TouchableOpacity onPress={onHideReplies}>
-                                    <Text style={styles.timeText}>
-                                      {t("hide-replies")}
-                                    </Text>
-                                  </TouchableOpacity>
-                                </View>
+                                    ))}
+                                    <TouchableOpacity onPress={onHideReplies}>
+                                      <Text style={styles.timeText}>
+                                        {t("hide-replies")}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  </View>
+                                )
                               ) : (
                                 <TouchableOpacity
                                   onPress={() => onViewReplies(i.id)}

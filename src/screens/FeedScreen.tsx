@@ -1,18 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
 import CommentModal from "components/CommentModal";
+import Loader from "components/common/Loader";
 import FeedCard from "components/FeedCard";
 import { useCheckAuth } from "hooks/useCheckAuth";
 import { useFeed } from "hooks/useFeed";
-import { FeedNavigationProp } from "navigation/HomeStack/types";
+import { AppNavigationProp } from "navigation/AppNavigator/types";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Colors } from "styles/colors";
 import { Comment, Post } from "types";
 
 const FeedScreen: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
   const [postList, setPostList] = useState<Post[]>([]);
-  const navigation = useNavigation<FeedNavigationProp>();
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post>();
@@ -25,14 +24,21 @@ const FeedScreen: React.FC = () => {
     addCommentMutation,
     addCommentReplyMutation,
   } = useFeed();
+  const { mutate: fetchFeed, isPending: feedPending } = getFeedMutation;
+  const { mutate: fetchComments, isPending: commentsPending } =
+    getCommentsMutation;
+  const { mutate: fetchReplies, isPending: repliesPending } =
+    getCommentRepliesMutation;
+
   const { checkAuth } = useCheckAuth();
+  const appNavigation = useNavigation<AppNavigationProp>();
 
   useEffect(() => {
     getPosts();
   }, []);
 
   const getPosts = async () => {
-    getFeedMutation.mutate(undefined, {
+    fetchFeed(undefined, {
       onSuccess: (res) => {
         setPostList(res.data.data);
       },
@@ -64,9 +70,10 @@ const FeedScreen: React.FC = () => {
 
   const getComments = async (item: Post) => {
     setCommentModalOpen(true);
-    getCommentsMutation.mutate(item.id, {
+    fetchComments(item.id, {
       onSuccess: (res) => {
         setComments(res.data.data);
+        setSelectedPost(item);
       },
       onError: (err) => {
         console.log("request failed:", err);
@@ -75,7 +82,7 @@ const FeedScreen: React.FC = () => {
   };
 
   const getCommentReplies = async (id: number) => {
-    getCommentRepliesMutation.mutate(id, {
+    fetchReplies(id, {
       onSuccess: (res) => {
         const index = comments.findIndex((i) => i.id === id);
         comments[index].replies = res.data.data;
@@ -149,6 +156,7 @@ const FeedScreen: React.FC = () => {
     //   screen: "VenueDetails",
     //   params: { venueId: id },
     // });
+    appNavigation.navigate("RestaurantDetails", { restaurantId: id });
   };
 
   const goToEvents = (id: number) => {
@@ -160,22 +168,26 @@ const FeedScreen: React.FC = () => {
 
   return (
     <>
-      <View style={styles.mainContainer}>
-        <FlatList
-          data={postList}
-          renderItem={({ item }) => (
-            <FeedCard
-              post={item}
-              onLike={() => onLike(item)}
-              onComment={() => getComments(item)}
-              goToRestaurant={() => goToRestaurant(item.restaurantId)}
-              goToEvents={() => goToEvents(item.restaurantId)}
-            />
-          )}
-          keyExtractor={(item) => `${item.id}`}
-          // ListEmptyComponent={<NoData message="No Posts available." />}
-        />
-      </View>
+      {feedPending ? (
+        <Loader />
+      ) : (
+        <View style={styles.mainContainer}>
+          <FlatList
+            data={postList}
+            renderItem={({ item }) => (
+              <FeedCard
+                post={item}
+                onLike={() => onLike(item)}
+                onComment={() => getComments(item)}
+                goToRestaurant={() => goToRestaurant(item.restaurantId)}
+                goToEvents={() => goToEvents(item.restaurantId)}
+              />
+            )}
+            keyExtractor={(item) => `${item.id}`}
+            // ListEmptyComponent={<NoData message="No Posts available." />}
+          />
+        </View>
+      )}
       {commentModalOpen && (
         <CommentModal
           visible={commentModalOpen}
@@ -184,6 +196,8 @@ const FeedScreen: React.FC = () => {
           getReplies={getCommentReplies}
           onLikeComment={onLikeComment}
           addComment={addComment}
+          commentsLoading={commentsPending}
+          repliesLoading={repliesPending}
         />
       )}
     </>

@@ -1,52 +1,76 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { EventDetails } from "types";
 import { Colors } from "styles/colors";
-import { RestaurantsNavigationProp } from "navigation/HomeStack/types";
-import { useEvents } from "hooks/useEvents";
 import EventCard from "components/EventCard";
 import NoData from "components/common/NoData";
 import { useTranslation } from "react-i18next";
+import Loader from "components/common/Loader";
+import { AppNavigationProp } from "navigation/AppNavigator/types";
+import {
+  TabBarNavigationProp,
+  TabBarParamList,
+} from "navigation/TabNavigator/types";
+import { useRestaurants } from "hooks/useRestaurants";
 
 const EventsScreen: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
   const [events, setEvents] = useState<EventDetails[]>([]);
-  const navigation = useNavigation<RestaurantsNavigationProp>();
-  const { getUpcomingEventsMutation } = useEvents();
+  const { getUpcomingEventsMutation } = useRestaurants();
+  const { mutate: fetchEvents, isPending } = getUpcomingEventsMutation;
   const { t } = useTranslation();
+  const navigation = useNavigation<AppNavigationProp>();
+  const route = useRoute<RouteProp<TabBarParamList, "Events">>();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getUpcomingEvents();
-  }, []);
+    if (isFocused) {
+      getUpcomingEvents();
+    }
+  }, [isFocused]);
 
   const getUpcomingEvents = async () => {
-    getUpcomingEventsMutation.mutate(undefined, {
-      onSuccess: (res) => {
-        console.log(res);
-        setEvents(res.data);
-      },
-      onError: (err) => {
-        console.log("request failed:", err);
-      },
-    });
+    console.log("route Params", route.params);
+    fetchEvents(
+      route.params?.restaurantId ? route.params.restaurantId : undefined,
+      {
+        onSuccess: (res) => {
+          console.log(res);
+          setEvents(res.data);
+        },
+        onError: (err) => {
+          console.log("request failed:", err);
+        },
+      }
+    );
   };
 
   const navigateToDetails = (item: EventDetails) => {
-    //navigation.navigate("RestaurantDetails", { venueId: item.id });
+    navigation.navigate("RestaurantDetails", { restaurantId: item.id });
   };
 
   return (
-    <View style={styles.mainContainer}>
-      <FlatList
-        data={events}
-        renderItem={({ item }) => (
-          <EventCard event={item} onPress={navigateToDetails} />
-        )}
-        keyExtractor={(item) => `${item.id}`}
-        ListEmptyComponent={<NoData message={t("no-events-available")} />}
-      />
-    </View>
+    <>
+      {isPending ? (
+        <Loader />
+      ) : (
+        <View style={styles.mainContainer}>
+          <FlatList
+            data={events}
+            renderItem={({ item }) => (
+              <EventCard event={item} onPress={navigateToDetails} />
+            )}
+            keyExtractor={(item) => `${item.id}`}
+            ListEmptyComponent={<NoData message={t("no-events-available")} />}
+          />
+        </View>
+      )}
+    </>
   );
 };
 

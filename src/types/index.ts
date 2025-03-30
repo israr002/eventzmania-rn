@@ -3,6 +3,21 @@ export type Amenity = {
   id: number;
   value: string;
 };
+
+export type PackageItem = {
+  menuType: string;
+  quantity: number;
+  menuOptions: { id: number; name: string }[];
+};
+
+export type Package = {
+  packageId: number;
+  packageName: string;
+  description: string;
+  pricePerPlate: number;
+  packageItems: PackageItem[];
+};
+
 export type Restaurant = {
   id: number;
   profileImage: string;
@@ -20,6 +35,12 @@ export type Restaurant = {
   totalCapacity: number;
   banquetCapacity: number;
   diningCapacity: number;
+  avg_rating: number;
+  eventsAvailable: boolean;
+  packagesAvailable: boolean;
+  packages: Package[];
+  basePrice: number;
+  discountPercent: number;
 };
 
 export type ImageData = {
@@ -34,7 +55,8 @@ export type User = {
   mobileNo: string;
   email: string;
   profileImage: string;
-  city: string;
+  state: { label: string; value: number };
+  city: { label: string; value: number };
 };
 
 export type Booking = {
