@@ -17,7 +17,7 @@ const RestaurantBookingCard: React.FC<BookingCardProps> = ({
 
   return (
     <View style={styles.detailsContainer}>
-      <Text style={styles.headingText}>{booking.venueName}</Text>
+      <Text style={styles.headingText}>{booking.restaurantName}</Text>
       <Text style={styles.text}>
         {t("occasion")}: {booking.occasionName}
       </Text>

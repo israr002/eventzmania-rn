@@ -1,9 +1,11 @@
 import CloseSvg from "assets/images/icons/close.svg";
-import SendSvg from "assets/images/icons/close.svg";
 import LikeSvg from "assets/images/icons/like.svg";
 import LikedSvg from "assets/images/icons/liked.svg";
+import SendSvg from "assets/images/icons/send.svg";
+import Loader from "components/common/Loader";
 import moment from "moment";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Image,
   Modal,
@@ -11,15 +13,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { Colors } from "styles/colors";
 import { Comment } from "types";
 
 import { styles } from "./styles";
 import { CommentModalProps } from "./types";
-import { useTranslation } from "react-i18next";
-import Loader from "components/common/Loader";
 
 const CommentModal: React.FC<CommentModalProps> = ({
   visible,
@@ -29,7 +29,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   getReplies,
   addComment,
   commentsLoading,
-  repliesLoading,
+  repliesLoading
 }) => {
   const [comment, setComment] = useState<string>("");
   const [selectedCommentIdToViewReplies, setSelectedCommentIdToViewReplies] =
@@ -48,7 +48,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
 
   const onViewReplies = (id: number) => {
     setSelectedCommentIdToViewReplies(id);
-    const index = comments.findIndex((i) => i.id === id);
+    const index = comments.findIndex(i => i.id === id);
     if (!comments[index].replies) {
       getReplies(id);
     }
@@ -66,8 +66,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
       setSelectedCommentToReply(undefined);
     }
   };
-
-  console.log("comments", comments);
 
   return (
     <Modal
@@ -87,7 +85,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
               <Loader />
             ) : comments.length > 0 ? (
               <>
-                {comments?.map((i) => (
+                {comments?.map(i => (
                   <View>
                     <View style={styles.commentContainer}>
                       <Image
@@ -115,7 +113,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                                   <Loader />
                                 ) : (
                                   <View>
-                                    {i.replies?.map((j) => (
+                                    {i.replies?.map(j => (
                                       <View style={styles.commentContainer}>
                                         <Image
                                           source={{ uri: j.profilePicture }}
@@ -200,7 +198,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
               placeholderTextColor={Colors.Grey}
               style={styles.input}
               value={comment}
-              onChangeText={(text) => setComment(text)}
+              onChangeText={text => setComment(text)}
             />
             {comment.length > 0 && (
               <TouchableOpacity onPress={addNewComment} style={styles.sendIcon}>

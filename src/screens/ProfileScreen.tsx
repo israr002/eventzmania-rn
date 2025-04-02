@@ -1,4 +1,16 @@
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import EditSvg from "assets/images/icons/edit.svg";
+import ListSvg from "assets/images/icons/list.svg";
+import LogoutSvg from "assets/images/icons/logout.svg";
+import Button from "components/common/Button";
+import Loader from "components/common/Loader";
+import { AuthContext } from "context/AuthContext";
+import { useAuth } from "hooks/useAuth";
+import { useAuthStore } from "hooks/useAuthStore";
+import { useCheckAuth } from "hooks/useCheckAuth";
+import { AppNavigationProp } from "navigation/AppNavigator/types";
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Dimensions,
@@ -7,23 +19,11 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { User } from "types";
-import { useAuth } from "hooks/useAuth";
 import { Colors } from "styles/colors";
 import { Metrics } from "styles/metrics";
-import Button from "components/common/Button";
-import { useTranslation } from "react-i18next";
-import { AuthContext } from "context/AuthContext";
-import { useCheckAuth } from "hooks/useCheckAuth";
-import Loader from "components/common/Loader";
-import { useAuthStore } from "hooks/useAuthStore";
-import EditSvg from "assets/images/icons/edit.svg";
-import ListSvg from "assets/images/icons/list.svg";
-import LogoutSvg from "assets/images/icons/logout.svg";
-import { AppNavigationProp } from "navigation/AppNavigator/types";
+import { User } from "types";
 
 const ProfileScreen: React.FC = () => {
   const [user, setUser] = useState<User>();
@@ -32,7 +32,7 @@ const ProfileScreen: React.FC = () => {
   const isFocused = useIsFocused();
   const { getProfileMutation } = useAuth();
   const { mutate: fetchProfile, isPending } = getProfileMutation;
-  const logout = useAuthStore((state) => state.logout);
+  const logout = useAuthStore(state => state.logout);
   const navigation = useNavigation<AppNavigationProp>();
 
   const { t } = useTranslation();
@@ -47,13 +47,13 @@ const ProfileScreen: React.FC = () => {
   const getUser = async () => {
     checkAuth(() =>
       fetchProfile(undefined, {
-        onSuccess: (res) => {
+        onSuccess: res => {
           console.log(res);
           setUser(res.data);
         },
-        onError: (err) => {
+        onError: err => {
           console.log("request failed:", err);
-        },
+        }
       })
     );
   };
@@ -61,7 +61,13 @@ const ProfileScreen: React.FC = () => {
   const logOut = () => {
     Alert.alert(t("logout"), t("are-you-sure-you-want-to-logout"), [
       { text: t("no"), style: "cancel" },
-      { text: t("yes"), onPress: () => logout() },
+      {
+        text: t("yes"),
+        onPress: () => {
+          logout();
+          navigation.navigate("Tabs", { screen: "Home" });
+        }
+      }
     ]);
     return true;
   };
@@ -168,18 +174,18 @@ const ProfileScreen: React.FC = () => {
 
 export const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
     backgroundColor: Colors.Black,
+    flex: 1
   },
   detailsContainer: {
     //width: "100%",
     //height: 250,
     backgroundColor: Colors.Primary,
     alignItems: "center",
-    paddingVertical: Metrics.padding.medium,
+    paddingVertical: Metrics.padding.medium
   },
   flex1: {
-    flex: 1,
+    flex: 1
   },
   // detailsContainer: {
   //   width: "75%",
@@ -193,49 +199,49 @@ export const styles = StyleSheet.create({
   //   elevation: 5,
   // },
   profileImage: {
-    height: 120,
-    width: 120,
+    borderColor: Colors.White,
     borderRadius: 60,
     borderWidth: 1,
-    borderColor: Colors.White,
+    height: 120,
+    width: 120
     //marginTop: -60,
   },
   headingText: {
     color: Colors.White,
-    fontWeight: "700",
     fontSize: Metrics.medium,
+    fontWeight: "700",
     marginTop: Metrics.xSmall,
-    textAlign: "center",
+    textAlign: "center"
   },
   text: {
     color: Colors.Black,
     fontSize: Metrics.xSmall,
     fontWeight: "500",
     marginVertical: Metrics.margin.xTiny,
-    textAlign: "center",
+    textAlign: "center"
   },
   editButton: {
-    width: "70%",
+    width: "70%"
     //marginBottom: Metrics.margin.base,
   },
   logoutButton: {
-    marginHorizontal: Metrics.padding.medium,
     marginBottom: 20,
+    marginHorizontal: Metrics.padding.medium
   },
   menu: {
-    padding: Metrics.padding.small,
     borderBottomWidth: 1,
     borderColor: Colors.Grey,
     flexDirection: "row",
+    padding: Metrics.padding.small
   },
   menuText: {
     color: Colors.White,
     fontSize: Metrics.xSmall,
-    fontWeight: "500",
+    fontWeight: "500"
   },
   menuIcon: {
-    marginRight: Metrics.margin.xxSmall,
-  },
+    marginRight: Metrics.margin.xxSmall
+  }
 });
 
 export default ProfileScreen;

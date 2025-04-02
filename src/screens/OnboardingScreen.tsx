@@ -13,7 +13,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { Colors } from "styles/colors";
 import { Metrics } from "styles/metrics";
@@ -33,18 +33,18 @@ const OnboardingScreen: React.FC = () => {
     {
       title: t("find-the-perfect-venue-for-every-occasion"),
       text: t("discover-beautiful-venues-to-host-your-events"),
-      image: require("assets/images/background/1.jpg"),
+      image: require("assets/images/background/1.jpg")
     },
     {
       title: t("experience-live-entertainment"),
       text: t("stay-updated-with-the-latest-shows"),
-      image: require("assets/images/background/2.jpg"),
+      image: require("assets/images/background/2.jpg")
     },
     {
       title: t("explore-events-and-updates"),
       text: t("browse-photos-and-videos-of-events-and-shows"),
-      image: require("assets//images/background/3.jpg"),
-    },
+      image: require("assets//images/background/3.jpg")
+    }
   ];
 
   const handleScroll = (event: any) => {
@@ -71,6 +71,12 @@ const OnboardingScreen: React.FC = () => {
     setGuestLoggedIn();
     setSeenOnBoarding();
     navigation.navigate("Tabs", { screen: "Home" });
+  };
+
+  const onSignIn = async () => {
+    setGuestLoggedIn();
+    setSeenOnBoarding();
+    navigation.navigate("Login");
   };
 
   return (
@@ -126,7 +132,7 @@ const OnboardingScreen: React.FC = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.primaryButton}
-                    onPress={() => navigation.navigate("Login")}
+                    onPress={onSignIn}
                   >
                     <Text style={styles.primaryButtonText}>{t("sign-in")}</Text>
                   </TouchableOpacity>
@@ -146,43 +152,43 @@ const OnboardingScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   activeDot: {
-    backgroundColor: Colors.White,
+    backgroundColor: Colors.White
   },
   buttonRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   container: {
     backgroundColor: Colors.Black,
-    flex: 1,
+    flex: 1
   },
   descriptionText: {
     color: Colors.White,
     fontSize: Metrics.xSmall,
-    fontWeight: "500",
+    fontWeight: "500"
   },
   dot: {
     backgroundColor: Colors.Grey,
     borderRadius: Metrics.radius.tiny,
     height: Metrics.tiny,
     marginHorizontal: Metrics.margin.xTiny,
-    width: Metrics.tiny,
+    width: Metrics.tiny
   },
   flex1: {
-    flex: 1,
+    flex: 1
   },
   headerRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   link: {
     color: Colors.Primary,
     fontSize: Metrics.medium,
-    fontWeight: "500",
+    fontWeight: "500"
   },
   logo: {
     height: 90,
-    width: 100,
+    width: 100
   },
   nextButton: {
     alignItems: "center",
@@ -190,19 +196,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Primary,
     height: 60,
     justifyContent: "center",
-    width: 60,
+    width: 60
   },
   nextButtonText: {
     color: Colors.White,
     fontSize: Metrics.small,
-    textAlign: "center",
+    textAlign: "center"
   },
   pagination: {
     alignItems: "center",
     alignSelf: "center",
     flexDirection: "row",
     justifyContent: "center",
-    marginVertical: Metrics.margin.small,
+    marginVertical: Metrics.margin.small
   },
   primaryButton: {
     alignItems: "center",
@@ -210,35 +216,35 @@ const styles = StyleSheet.create({
     borderColor: Colors.White,
     borderWidth: 2,
     paddingVertical: Metrics.padding.xxSmall,
-    width: "45%",
+    width: "45%"
   },
   primaryButtonText: {
     color: Colors.White,
     fontSize: Metrics.xSmall,
-    fontWeight: "700",
+    fontWeight: "700"
   },
   secondaryButton: {
     alignItems: "center",
     borderColor: Colors.Primary,
     borderWidth: 2,
     padding: 15,
-    width: "45%",
+    width: "45%"
   },
   secondaryButtonText: {
     color: Colors.White,
     fontSize: Metrics.xSmall,
-    fontWeight: "700",
+    fontWeight: "700"
   },
   slide: {
     padding: Metrics.padding.base,
-    width: width,
+    width: width
   },
   titleText: {
     color: Colors.White,
     fontSize: Metrics.base,
     fontWeight: "bold",
-    marginBottom: Metrics.margin.small,
-  },
+    marginBottom: Metrics.margin.small
+  }
 });
 
 export default OnboardingScreen;

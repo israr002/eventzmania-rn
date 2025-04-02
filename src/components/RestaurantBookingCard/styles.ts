@@ -1,34 +1,34 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from "react-native";
 
-import {Colors} from '../../styles/colors';
-import {Metrics} from '../../styles/metrics';
+import { Colors } from "../../styles/colors";
+import { Metrics } from "../../styles/metrics";
 
 export const styles = StyleSheet.create({
   detailsContainer: {
     backgroundColor: Colors.Black,
-    borderWidth: 1,
     borderColor: Colors.Grey,
     borderRadius: Metrics.radius.base,
-    marginVertical: Metrics.margin.tiny,
+    borderWidth: 1,
     marginHorizontal: Metrics.margin.medium,
-    paddingVertical: Metrics.padding.small,
+    marginVertical: Metrics.margin.tiny,
     paddingHorizontal: Metrics.padding.base,
+    paddingVertical: Metrics.padding.small
   },
   headingText: {
     color: Colors.White,
-    fontSize: Metrics.medium,
-    fontWeight: '700',
     flex: 1,
+    fontSize: Metrics.medium,
+    fontWeight: "700"
+  },
+  link: {
+    alignSelf: "flex-end"
+  },
+  linkText: {
+    color: Colors.Primary,
+    fontSize: Metrics.xSmall
   },
   text: {
     color: Colors.Grey,
-    fontSize: Metrics.xSmall,
-  },
-  linkText: {
-    color: Colors.Pink,
-    fontSize: Metrics.xSmall,
-  },
-  link: {
-    alignSelf: 'flex-end',
-  },
+    fontSize: Metrics.xSmall
+  }
 });

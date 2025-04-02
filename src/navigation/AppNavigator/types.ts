@@ -7,7 +7,7 @@ export type AppStackParamList = {
   Onboarding: undefined;
   Login: undefined;
   Otp: { mobileNo: string; resendTimeInSeconds: number; isRegistered: boolean };
-  SignUp: undefined;
+  SignUp: { mobileNo: string };
   Tabs: { screen?: keyof TabBarParamList; params?: any };
   RestaurantDetails: { restaurantId: number };
   RestaurantCalendar: { restaurantId: number };

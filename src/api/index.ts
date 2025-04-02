@@ -1,39 +1,32 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { API_ENDPOINTS } from "constants/apiEndpoints";
-import { useAuthStore } from "hooks/useAuthStore";
 import { Alert } from "react-native";
 import Config from "react-native-config";
 
 const api = axios.create({
-  baseURL: Config.BASEURL,
-  //baseURL: "http://192.168.1.99:4000/",
+  baseURL: Config.BASEURL
 });
 
 // Request Interceptor
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig<any>) => {
     const accessToken = await AsyncStorage.getItem("eventAccessToken");
-    //const { accessToken } = useAuthStore();
-    // const token =
-    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTczOTQ1Mzk1NywiZXhwIjoxNzQ0NjM3OTU3LCJpc3MiOiJ1bmtub3duIn0.ogfzeBzokFLtwmyZ5ccLw1QjZA4xHvXBQuBuuG5ltF4";
     if (accessToken) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
 // Response Interceptor
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
-  async (error) => {
+  async error => {
     if (error?.response?.status === 401) {
       const refreshToken = await AsyncStorage.getItem("eventRefreshToken");
-      //const { refreshToken, refresh, logout } = useAuthStore();
-
       if (!refreshToken) {
         Alert.alert("Session Expired", "Please log in again.");
         await AsyncStorage.removeItem("isLoggedIn");
@@ -44,7 +37,7 @@ api.interceptors.response.use(
 
       try {
         const response = await axios.post(API_ENDPOINTS.REFRESH_TOKEN, {
-          token: refreshToken,
+          token: refreshToken
         });
         await AsyncStorage.setItem(
           "eventAccessToken",

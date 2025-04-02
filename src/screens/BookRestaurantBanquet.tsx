@@ -1,4 +1,19 @@
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import Button from "components/common/Button";
+import DateTimePicker from "components/common/DateTimePicker";
+import Dropdown from "components/common/Dropdown";
+import Loader from "components/common/Loader";
+import { useBookings } from "hooks/useBookings";
+import { useCheckAuth } from "hooks/useCheckAuth";
+import { useDropdown } from "hooks/useDropdown";
+import { useRestaurants } from "hooks/useRestaurants";
+import {
+  AppNavigationProp,
+  AppStackParamList
+} from "navigation/AppNavigator/types";
 import React, { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   ScrollView,
@@ -6,38 +21,22 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
-
-import { dropdownItem } from "types";
-import {
-  AppNavigationProp,
-  AppStackParamList,
-} from "navigation/AppNavigator/types";
-import { useDropdown } from "hooks/useDropdown";
-import { useRestaurants } from "hooks/useRestaurants";
+import Config from "react-native-config";
+import RazorpayCheckout, { CheckoutOptions } from "react-native-razorpay";
 import { Colors } from "styles/colors";
-import { useBookings } from "hooks/useBookings";
-import { useCheckAuth } from "hooks/useCheckAuth";
-import Dropdown from "components/common/Dropdown";
-import DateTimePicker from "components/common/DateTimePicker";
-import Button from "components/common/Button";
 import { Metrics } from "styles/metrics";
-import Loader from "components/common/Loader";
-import { useTranslation } from "react-i18next";
+import { dropdownItem } from "types";
 
 const BookRestaurantBanquet: React.FC = () => {
   const [existingBookings, setExistingBookings] = useState([]);
   const [packages, setPackages] = useState([]);
   const [occasions, setOccasions] = useState<dropdownItem[]>([]);
   const [date, setDate] = useState();
-  const [fromTime, setFromTime] = useState();
-  const [toTime, setToTime] = useState();
   const [noOfPeople, setNoOfPeople] = useState();
   const [selectedPackage, setSelectedPackage] = useState();
-  const [selectedOccasion, setSelectedOccasion] = useState<dropdownItem>();
   const [couponCode, setCouponCode] = useState<string>("");
   const [coupon, setCoupon] = useState({});
 
@@ -48,7 +47,11 @@ const BookRestaurantBanquet: React.FC = () => {
   const { getRestaurantPackagesMutation, getRestaurantCalendarMutation } =
     useRestaurants();
   const { getOccasionsMutation } = useDropdown();
-  const { applyCodeMutation, bookRestaurantBanquetMutation } = useBookings();
+  const {
+    applyCodeMutation,
+    bookRestaurantBanquetMutation,
+    verifyBanquetPaymentMutation
+  } = useBookings();
   const { checkAuth } = useCheckAuth();
   const { t } = useTranslation();
 
@@ -63,6 +66,9 @@ const BookRestaurantBanquet: React.FC = () => {
   const { mutate: bookBanquet, isPending: bookBanquetPending } =
     bookRestaurantBanquetMutation;
 
+  const methods = useForm();
+  const { handleSubmit } = methods;
+
   useEffect(() => {
     getRequiredData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,36 +76,36 @@ const BookRestaurantBanquet: React.FC = () => {
 
   const getRequiredData = async () => {
     fetchPackage(restaurant.id, {
-      onSuccess: (res) => {
-        setPackages(res.data.data);
+      onSuccess: res => {
+        setPackages(res.data);
       },
-      onError: (err) => {
+      onError: err => {
         console.log("request failed:", err);
-      },
+      }
     });
     fetchCalendar(restaurant.id, {
-      onSuccess: (res) => {
-        const calenderData = res.data.data.map((i: any) => ({
+      onSuccess: res => {
+        const calenderData = res.data.map((i: any) => ({
           ...i,
-          dots: [{ color: Colors.Primary }],
+          dots: [{ color: Colors.Primary }]
         }));
         setExistingBookings(calenderData);
       },
-      onError: (err) => {
+      onError: err => {
         console.log("request failed:", err);
-      },
+      }
     });
     fetchOccasions(undefined, {
-      onSuccess: (res) => {
-        const occasionData = res.data.data.map((i: any) => ({
+      onSuccess: res => {
+        const occasionData = res.data.map((i: any) => ({
           label: i.name,
-          value: i.id,
+          value: i.id
         }));
         setOccasions(occasionData);
       },
-      onError: (err) => {
+      onError: err => {
         console.log("request failed:", err);
-      },
+      }
     });
   };
 
@@ -107,56 +113,95 @@ const BookRestaurantBanquet: React.FC = () => {
     const data = {
       restaurantId: restaurant.id,
       couponCode: couponCode,
-      amount: (noOfPeople ?? 0) * (selectedPackage?.pricePerPlate ?? 0),
+      amount: (noOfPeople ?? 0) * (selectedPackage?.pricePerPlate ?? 0)
     };
     checkAuth(() =>
       applyCoupon(data, {
-        onSuccess: (res) => {
+        onSuccess: res => {
           if (res && Object.keys(res.data.data).length > 0) {
             setCoupon(res.data);
           }
         },
-        onError: (err) => {
+        onError: err => {
           console.log("Request Failed:", err);
-        },
+        }
       })
     );
   };
 
-  const bookRestaurantBanquet = async () => {
-    const data = {
-      restaurantId: restaurant.id,
-      date: new Date(date),
-      fromTime: new Date(fromTime).toTimeString(),
-      toTime: new Date(toTime).toTimeString(),
-      occasionId: selectedOccasion?.value as number,
-      packageId: selectedPackage?.packageId as number,
-      noOfPeople: noOfPeople as unknown as number,
-      totalAmount:
-        restaurant?.basePrice + selectedPackage?.pricePerPlate * noOfPeople,
-      couponId: coupon.couponId,
-      couponDiscount: coupon.discount,
-      restaurantDiscount:
-        restaurant?.basePrice * (restaurant.discountPercent / 100),
+  const onSubmit = async data => {
+    const amountData = {
       finalAmount:
         restaurant?.basePrice +
         (selectedPackage?.pricePerPlate ?? 0) * (noOfPeople ?? 0) -
         restaurant?.basePrice * (restaurant.discountPercent / 100) -
-        (coupon.discount ?? 0),
+        (coupon.discount ?? 0)
     };
     checkAuth(() =>
-      bookBanquet(data, {
-        onSuccess: (res) => {
-          Alert.alert("Information", "Your Booking is Successful", [
-            {
-              text: "OK",
-              onPress: () => navigation.navigate("MyBookings"),
+      bookBanquet(amountData, {
+        onSuccess: res => {
+          const options: CheckoutOptions = {
+            name: restaurant.name,
+            image: restaurant.profileImage,
+            description: `Payment for ${restaurant.name}`,
+            order_id: res?.data?.order.id,
+            key: Config.RAZORPAY_KEY as string,
+            amount: res.data.order.amount,
+            currency: res.data.order.currency,
+            prefill: {
+              email: res.data.user.email,
+              contact: res.data.user.mobileNo,
+              name: res.data.user.name
             },
-          ]);
+            theme: { color: Colors.Primary }
+          };
+
+          RazorpayCheckout.open(options)
+            .then(async transaction => {
+              const transactionBody = {
+                restaurantId: restaurant.id,
+                date: new Date(date),
+                fromTime: new Date(data.fromTime).toTimeString(),
+                toTime: new Date(data.toTime).toTimeString(),
+                occasionId: data.occasion?.value as number,
+                packageId: selectedPackage?.packageId as number,
+                noOfPeople: noOfPeople as unknown as number,
+                totalAmount:
+                  restaurant?.basePrice +
+                  selectedPackage?.pricePerPlate * noOfPeople,
+                couponId: coupon.couponId,
+                couponDiscount: coupon.discount,
+                restaurantDiscount:
+                  restaurant?.basePrice * (restaurant.discountPercent / 100),
+                finalAmount:
+                  restaurant?.basePrice +
+                  (selectedPackage?.pricePerPlate ?? 0) * (noOfPeople ?? 0) -
+                  restaurant?.basePrice * (restaurant.discountPercent / 100) -
+                  (coupon.discount ?? 0),
+                orderId: res?.data?.order?.id,
+                transaction
+              };
+              verifyBanquetPaymentMutation.mutate(transactionBody, {
+                onSuccess: async resp => {
+                  Alert.alert("Information", "Your Booking is Successful", [
+                    {
+                      text: "OK",
+                      onPress: () => navigation.navigate("MyBookings")
+                    }
+                  ]);
+                },
+                onError: error => {
+                  console.log("Request failed:", error);
+                }
+              });
+            })
+            .catch(async error => {
+              console.log({ error });
+            });
         },
-        onError: (err) => {
+        onError: err => {
           console.log("Request Failed:", err);
-        },
+        }
       })
     );
   };
@@ -165,16 +210,22 @@ const BookRestaurantBanquet: React.FC = () => {
     navigation.goBack();
   };
 
-  const onSelectDate = (date) => {
+  const onSelectDate = date => {
     setDate(date);
   };
 
   const onChangeNoOfPeople = (text: string) => {
-    setNoOfPeople(text);
+    if (Number(text) <= restaurant.banquetCapacity) {
+      setNoOfPeople(text);
+    } else {
+      Alert.alert(
+        "Information",
+        `Banquet Capacity is ${restaurant.banquetCapacity}`
+      );
+    }
   };
 
-  const selectPackage = (item) => {
-    console.log({ item });
+  const selectPackage = item => {
     if (selectedPackage && selectedPackage?.packageId === item.packageId) {
       setSelectedPackage();
     } else {
@@ -186,7 +237,7 @@ const BookRestaurantBanquet: React.FC = () => {
     setCouponCode(text);
   };
 
-  const disabledDates = existingBookings?.map((i) => i.date);
+  const disabledDates = existingBookings?.map(i => i.date);
 
   return (
     <>
@@ -198,16 +249,9 @@ const BookRestaurantBanquet: React.FC = () => {
         <Loader />
       ) : (
         <ScrollView style={styles.inputContainer}>
-          <Text style={styles.label}>{t("select-occasion")}</Text>
-          <Dropdown
-            items={occasions}
-            placeholder={t("select-occasion")}
-            onChangeItem={(selected) => setSelectedOccasion(selected)}
-            selectedValue={selectedOccasion}
-          />
-
           <Text style={styles.label}>{t("select-date")}</Text>
           <ReactNativeCalendarStrip
+            minDate={new Date()}
             style={{ height: 100, width: "100%" }}
             selectedDate={date}
             iconLeft={false}
@@ -231,38 +275,42 @@ const BookRestaurantBanquet: React.FC = () => {
               backgroundColor: Colors.Black,
               marginBottom: 10,
               borderWidth: 1,
-              borderColor: Colors.Grey,
+              borderColor: Colors.Grey
             }}
           />
+          <FormProvider {...methods}>
+            <Dropdown
+              name="occasion"
+              placeholder={t("select-occasion")}
+              items={occasions}
+            />
+            <DateTimePicker
+              name="fromTime"
+              mode="time"
+              placeholder={t("select-from-time")}
+              // date={fromTime}
+              // setDate={(date: Date | undefined) => setFromTime(date)}
+            />
+            <DateTimePicker
+              name="toTime"
+              mode="time"
+              placeholder={t("select-to-time")}
+              // date={toTime}
+              // setDate={(date: Date | undefined) => setToTime(date)}
+            />
+          </FormProvider>
 
-          <Text style={styles.label}>{t("select-from-time")}</Text>
-          <DateTimePicker
-            placeHolder={t("select-from-time")}
-            mode="time"
-            date={fromTime}
-            setDate={(date: Date | undefined) => setFromTime(date)}
-          />
-
-          <Text style={styles.label}>{t("select-to-time")}</Text>
-          <DateTimePicker
-            placeHolder={t("select-to-time")}
-            mode="time"
-            date={toTime}
-            setDate={(date: Date | undefined) => setToTime(date)}
-          />
-
-          <Text style={styles.label}>{t("enter-approx-no-of-people")}</Text>
           <TextInput
-            style={styles.input}
             placeholder={t("no-of-people")}
             placeholderTextColor={Colors.Grey}
+            keyboardType="numeric"
             value={noOfPeople}
             onChangeText={onChangeNoOfPeople}
-            keyboardType="numeric"
+            style={styles.input}
           />
 
           <Text style={styles.label}>{t("select-package")}</Text>
-          {packages?.map((i) => {
+          {packages?.map(i => {
             return (
               <View style={styles.radioContainer}>
                 <TouchableOpacity
@@ -300,10 +348,12 @@ const BookRestaurantBanquet: React.FC = () => {
           </View>
 
           <View style={styles.priceContainer}>
-            <View style={styles.priceDetailsRow}>
-              <Text style={styles.text}>{t("base-price")}</Text>
-              <Text style={styles.text}>&#8377;{restaurant?.basePrice}</Text>
-            </View>
+            {restaurant.basePrice > 0 && (
+              <View style={styles.priceDetailsRow}>
+                <Text style={styles.text}>{t("base-price")}</Text>
+                <Text style={styles.text}>&#8377;{restaurant?.basePrice}</Text>
+              </View>
+            )}
             {selectedPackage && noOfPeople && (
               <View style={styles.priceDetailsRow}>
                 <Text style={styles.text}>{t("package-amount")}</Text>
@@ -321,7 +371,7 @@ const BookRestaurantBanquet: React.FC = () => {
               </Text>
             </View>
             <View style={styles.horizontalLine} />
-            {restaurant.discountPercent > 0 && (
+            {restaurant.discountPercent > 0 && restaurant.basePrice > 0 && (
               <View style={styles.priceDetailsRow}>
                 <Text style={styles.text}>
                   {t("restaurant-discount")} ({restaurant.discountPercent}%)
@@ -359,16 +409,10 @@ const BookRestaurantBanquet: React.FC = () => {
             />
             <Button
               title={t("place-booking")}
-              onPress={bookRestaurantBanquet}
+              //onPress={bookRestaurantBanquet}
+              onPress={handleSubmit(onSubmit)}
               style={styles.rightButton}
-              disabled={
-                !selectedOccasion ||
-                !date ||
-                !fromTime ||
-                !toTime ||
-                !noOfPeople ||
-                !selectedPackage
-              }
+              disabled={!date || !selectedPackage}
             />
           </View>
         </ScrollView>
@@ -378,107 +422,109 @@ const BookRestaurantBanquet: React.FC = () => {
 };
 
 export const styles = StyleSheet.create({
-  detailsMainContainer: {
-    backgroundColor: Colors.Primary,
-    paddingHorizontal: Metrics.padding.base,
-    paddingVertical: Metrics.padding.large,
-  },
-  label: {
-    color: Colors.White,
-    marginTop: Metrics.margin.small,
-  },
-  text: {
-    color: Colors.White,
-  },
-  inputContainer: {
-    padding: Metrics.padding.base,
-  },
-  input: {
-    height: Metrics.xLarge,
-    paddingVertical: 0,
-    alignItems: "center",
-    borderColor: Colors.White,
+  applyButton: {
+    borderColor: Colors.Primary,
+    borderRadius: Metrics.radius.small,
     borderWidth: 1,
-    borderRadius: Metrics.radius.tiny,
-    paddingHorizontal: Metrics.padding.small,
+    height: Metrics.xLarge,
+    justifyContent: "center",
+    marginLeft: Metrics.margin.small,
     marginTop: Metrics.margin.tiny,
-    color: Colors.White,
-    flex: 1,
+    paddingHorizontal: Metrics.padding.xxSmall
+  },
+  applyButtonText: {
+    color: Colors.Primary
   },
   buttonContainer: {
     flexDirection: "row",
-    marginBottom: Metrics.margin.large,
+    marginBottom: Metrics.margin.large
   },
-  leftButton: {
-    marginRight: Metrics.margin.xTiny,
-    flex: 1,
+  couponTextInputContainer: {
+    flexDirection: "row"
   },
-  rightButton: {
-    marginLeft: Metrics.margin.xTiny,
-    flex: 1,
+  detailsMainContainer: {
+    backgroundColor: Colors.Primary,
+    paddingHorizontal: Metrics.padding.base,
+    paddingVertical: Metrics.padding.large
   },
-  radioContainer: {
-    flexDirection: "row",
-    margin: Metrics.margin.xxSmall,
-    alignItems: "center",
-  },
-  outerCircle: {
-    height: Metrics.base,
-    width: Metrics.base,
-    borderColor: Colors.White,
-    borderWidth: 1,
-    borderRadius: Metrics.radius.base,
-    marginRight: Metrics.margin.xxSmall,
-    alignItems: "center",
-    justifyContent: "center",
+  horizontalLine: {
+    backgroundColor: Colors.White,
+    height: 1,
+    marginVertical: Metrics.margin.tiny
   },
   innerCircle: {
-    height: Metrics.xxSmall,
-    width: Metrics.xxSmall,
     backgroundColor: Colors.Primary,
     borderRadius: Metrics.radius.base,
+    height: Metrics.xxSmall,
+    width: Metrics.xxSmall
   },
-  radioText: {
+  input: {
+    alignItems: "center",
+    borderColor: Colors.White,
+    borderRadius: Metrics.radius.tiny,
+    borderWidth: 1,
     color: Colors.White,
+    flex: 1,
+    height: Metrics.xLarge,
+    marginTop: Metrics.margin.tiny,
+    paddingHorizontal: Metrics.padding.small,
+    paddingLeft: Metrics.padding.large,
+    paddingVertical: 0
+  },
+  inputContainer: {
+    backgroundColor: Colors.Black,
+    padding: Metrics.padding.base
+  },
+  label: {
+    color: Colors.White,
+    marginTop: Metrics.margin.small
+  },
+  leftButton: {
+    flex: 1,
+    marginRight: Metrics.margin.xTiny
+  },
+  outerCircle: {
+    alignItems: "center",
+    borderColor: Colors.White,
+    borderRadius: Metrics.radius.base,
+    borderWidth: 1,
+    height: Metrics.base,
+    justifyContent: "center",
+    marginRight: Metrics.margin.xxSmall,
+    width: Metrics.base
   },
   priceContainer: {
-    padding: Metrics.padding.xxSmall,
-    borderWidth: 1,
     borderColor: Colors.Grey,
+    borderWidth: 1,
     marginBottom: Metrics.margin.tiny,
     marginTop: Metrics.margin.base,
+    padding: Metrics.padding.xxSmall
   },
   priceDetailsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: Metrics.margin.xTiny,
+    marginVertical: Metrics.margin.xTiny
   },
   priceText: {
     color: Colors.White,
-    fontWeight: "bold",
     fontSize: 16,
+    fontWeight: "bold"
   },
-  couponTextInputContainer: {
+  radioContainer: {
+    alignItems: "center",
     flexDirection: "row",
+    margin: Metrics.margin.xxSmall
   },
-  applyButton: {
-    borderWidth: 1,
-    borderColor: Colors.Primary,
-    marginLeft: Metrics.margin.small,
-    paddingHorizontal: Metrics.padding.xxSmall,
-    justifyContent: "center",
-    height: Metrics.xLarge,
-    marginTop: Metrics.margin.tiny,
-    borderRadius: Metrics.radius.small,
+  radioText: {
+    color: Colors.White
   },
-  applyButtonText: {
-    color: Colors.Primary,
+  rightButton: {
+    flex: 1,
+    marginLeft: Metrics.margin.xTiny
   },
-  horizontalLine: {
-    height: 1,
-    backgroundColor: Colors.White,
-    marginVertical: Metrics.margin.tiny,
-  },
+  text: {
+    color: Colors.White
+  }
 });
 
 export default BookRestaurantBanquet;

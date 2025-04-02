@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from "constants/apiEndpoints";
+
 import { apiCallService } from "./apiService";
 
 export const getTicketBookings = async () => {
@@ -18,18 +19,7 @@ export const bookTicket = async (data: BookTicketRequest) => {
 };
 
 export type BookRestaurantBanquetRequest = {
-  restaurantId: number;
-  date: Date;
-  fromTime: string;
-  toTime: string;
-  occasionId: Number;
-  packageId: Number;
-  noOfPeople: Number;
-  totalAmount: Number;
-  couponId?: Number;
-  couponDiscount?: Number;
-  restaurantDiscount: Number;
-  finalAmount: Number;
+  finalAmount: number;
 };
 export const bookRestaurantBanquet = async (
   data: BookRestaurantBanquetRequest
@@ -44,4 +34,37 @@ export type ApplyCouponRequest = {
 };
 export const applyCouponCode = async (data: ApplyCouponRequest) => {
   return apiCallService("POST", API_ENDPOINTS.APPLY_COUPON, data);
+};
+
+export type VerifyTicketPaymentRequest = {
+  eventId: number;
+  noOfTickets: number;
+  orderId: string;
+  totalAmount: number;
+  transaction: any;
+};
+export const VerifyTicketPayment = async (data: VerifyTicketPaymentRequest) => {
+  return apiCallService("POST", API_ENDPOINTS.VERIFY_TICKET_PAYMENT, data);
+};
+
+export type VerifyBanquetPaymentRequest = {
+  restaurantId: number;
+  date: Date;
+  fromTime: string;
+  toTime: string;
+  occasionId: number;
+  packageId: number;
+  noOfPeople: number;
+  totalAmount: number;
+  couponId?: number;
+  couponDiscount?: number;
+  restaurantDiscount: number;
+  finalAmount: number;
+  orderId: string;
+  transaction: any;
+};
+export const verifyBanquetPayment = async (
+  data: VerifyBanquetPaymentRequest
+) => {
+  return apiCallService("POST", API_ENDPOINTS.VERIFY_BANQUET_PAYMENT, data);
 };

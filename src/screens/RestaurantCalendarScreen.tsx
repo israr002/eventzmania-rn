@@ -1,21 +1,21 @@
+import { RouteProp, useRoute } from "@react-navigation/native";
+import ForwardSvg from "assets/images/icons/forward.svg";
+import Loader from "components/common/Loader";
+import { useRestaurants } from "hooks/useRestaurants";
+import moment from "moment";
+import { AppStackParamList } from "navigation/AppNavigator/types";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import moment from "moment";
 import { Calendar } from "react-native-calendars";
-import { useRestaurants } from "hooks/useRestaurants";
 import { Colors } from "styles/colors";
 import { Metrics } from "styles/metrics";
-import { AppStackParamList } from "navigation/AppNavigator/types";
-import Loader from "components/common/Loader";
-import ForwardSvg from "assets/images/icons/forward.svg";
-import { useTranslation } from "react-i18next";
 
 const RestaurantCalendarScreen: React.FC = () => {
   const [dates, setDates] = useState([]);
@@ -34,27 +34,26 @@ const RestaurantCalendarScreen: React.FC = () => {
 
   const getCalendar = async () => {
     fetchCalendar(restaurantId, {
-      onSuccess: (res) => {
+      onSuccess: res => {
         console.log(res);
         setDates(res.data);
         const result = {};
-        res.data.forEach((i) => {
+        res.data.forEach(i => {
           const formattedDate = moment(i.date).format("YYYY-MM-DD");
           result[formattedDate] = {
             marked: true,
-            dotColor: Colors.Primary,
+            dotColor: Colors.Primary
           };
-          console.log("Result", result);
         });
         setMarkedDates(result);
       },
-      onError: (err) => {
+      onError: err => {
         console.log("request failed:", err);
-      },
+      }
     });
   };
 
-  const onSelectDate = (date) => {
+  const onSelectDate = date => {
     if (selectedDate === date.dateString) {
       setSelectedDate(undefined);
       setEventDetails([]);
@@ -62,10 +61,9 @@ const RestaurantCalendarScreen: React.FC = () => {
       setSelectedDate(date.dateString);
       const event =
         dates.find(
-          (i) => moment(i.date).format("YYYY-MM-DD") === date.dateString
+          i => moment(i.date).format("YYYY-MM-DD") === date.dateString
         )?.timeSlots || [];
       setEventDetails(event);
-      console.log(eventDetails);
     }
   };
 
@@ -89,12 +87,12 @@ const RestaurantCalendarScreen: React.FC = () => {
               textDisabledColor: Colors.Grey,
               monthTextColor: Colors.White,
               arrowColor: Colors.Primary,
-              disabledArrowColor: Colors.Grey,
+              disabledArrowColor: Colors.Grey
             }}
           />
           {eventDetails.length > 0 ? (
             <ScrollView>
-              {eventDetails?.map((i) => {
+              {eventDetails?.map(i => {
                 return (
                   <View style={styles.detailRowContainer}>
                     <View>
@@ -129,51 +127,51 @@ const RestaurantCalendarScreen: React.FC = () => {
 };
 
 export const styles = StyleSheet.create({
-  mainContainer: {
-    backgroundColor: Colors.Black,
-    flex: 1,
-  },
-  detailRowContainer: {
-    flexDirection: "row",
-    marginHorizontal: Metrics.margin.small,
-    marginVertical: Metrics.margin.xSmall,
-    padding: Metrics.padding.xSmall,
-    justifyContent: "space-between",
-    borderRadius: Metrics.radius.small,
-    borderWidth: 1,
-    borderColor: Colors.Grey,
-    alignItems: "center",
-  },
-  arrowContainer: {
-    padding: Metrics.padding.tiny,
-    borderRadius: Metrics.radius.large,
-    backgroundColor: Colors.Primary,
-  },
   arrow: {
     height: Metrics.medium,
-    width: Metrics.medium,
     tintColor: Colors.White,
+    width: Metrics.medium
   },
-  headingText: {
-    color: Colors.White,
-    fontSize: Metrics.small,
-    fontWeight: "500",
-    marginBottom: Metrics.margin.xTiny,
+  arrowContainer: {
+    backgroundColor: Colors.Primary,
+    borderRadius: Metrics.radius.large,
+    padding: Metrics.padding.tiny
   },
-  text: {
-    color: Colors.Grey,
-    fontSize: Metrics.xxSmall,
-    fontWeight: "500",
-  },
-  emptyTextContainer: {
-    marginVertical: Metrics.margin.large,
+  detailRowContainer: {
+    alignItems: "center",
+    borderColor: Colors.Grey,
+    borderRadius: Metrics.radius.small,
+    borderWidth: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: Metrics.margin.small,
+    marginVertical: Metrics.margin.xSmall,
+    padding: Metrics.padding.xSmall
   },
   emptyText: {
     color: Colors.White,
     fontSize: Metrics.xSmall,
     fontWeight: "500",
-    textAlign: "center",
+    textAlign: "center"
   },
+  emptyTextContainer: {
+    marginVertical: Metrics.margin.large
+  },
+  headingText: {
+    color: Colors.White,
+    fontSize: Metrics.small,
+    fontWeight: "500",
+    marginBottom: Metrics.margin.xTiny
+  },
+  mainContainer: {
+    backgroundColor: Colors.Black,
+    flex: 1
+  },
+  text: {
+    color: Colors.Grey,
+    fontSize: Metrics.xxSmall,
+    fontWeight: "500"
+  }
 });
 
 export default RestaurantCalendarScreen;

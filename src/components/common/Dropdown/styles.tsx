@@ -4,12 +4,23 @@ import { Metrics } from "styles/metrics";
 
 export const styles = StyleSheet.create({
   container: {
-    marginVertical: Metrics.margin.tiny,
+    marginVertical: Metrics.margin.tiny
   },
   error: {
     color: Colors.Red,
     fontSize: Metrics.xxSmall,
-    marginTop: Metrics.margin.xTiny,
+    marginTop: Metrics.margin.xTiny
+  },
+  flex1: {
+    flex: 1
+  },
+  input: {
+    color: Colors.White,
+    flex: 1,
+    height: Metrics.xLarge,
+    justifyContent: "center",
+    paddingHorizontal: Metrics.margin.xxSmall,
+    paddingVertical: 0
   },
   inputContainer: {
     alignItems: "center",
@@ -17,66 +28,32 @@ export const styles = StyleSheet.create({
     borderRadius: Metrics.radius.tiny,
     borderWidth: 1,
     flexDirection: "row",
-    paddingHorizontal: Metrics.padding.small,
-    //zIndex: 9999,
-  },
-  input: {
-    color: Colors.White,
-    height: Metrics.xLarge,
-    paddingVertical: 0,
-    justifyContent: "center",
-    paddingHorizontal: Metrics.margin.xxSmall,
+    paddingHorizontal: Metrics.padding.small
   },
   inputText: {
-    color: Colors.White,
+    color: Colors.White
   },
   listContainer: {
     backgroundColor: Colors.Black,
-    borderWidth: 1,
-    borderTopWidth: 0,
     borderColor: Colors.White,
+    borderTopWidth: 0,
+    borderWidth: 1,
+    left: 0,
     maxHeight: 120,
     position: "absolute",
-    zIndex: 9999,
-    width: 325,
+    right: 0,
     top: Metrics.xLarge,
+    zIndex: 9999
   },
   listItem: {
     paddingHorizontal: Metrics.padding.small,
-    paddingVertical: Metrics.padding.xTiny,
+    paddingVertical: Metrics.padding.xTiny
   },
   listItemText: {
-    color: Colors.White,
+    color: Colors.White
   },
-  flex1: {
+  touchable: {
     flex: 1,
-  },
-  // container: {
-  //   ...commonStyles.container,
-  //   flex: 1,
-  // },
-  // input: {
-  //   ...commonStyles.input,
-  //   ...commonStyles.inputText,
-  //   padding: 0,
-  // },
-  // itemContainerStyle: {
-  //   maxHeight: 120,
-  //   zIndex: 10000,
-  //   position: "absolute",
-  //   top: -7,
-  //   width: "100%",
-  //   borderBottomLeftRadius: BORDER_RADIUS.SMALL,
-  //   borderBottomRightRadius: BORDER_RADIUS.SMALL,
-  //   borderColor: COLOR.BORDER,
-  //   backgroundColor: COLOR.WHITE,
-  //   borderWidth: 1,
-  // },
-  // itemStyle: {
-  //   paddingVertical: 5,
-  //   paddingHorizontal: 10,
-  // },
-  // itemTextStyle: {
-  //   color: COLOR.TEXT,
-  // },
+    flexDirection: "row"
+  }
 });

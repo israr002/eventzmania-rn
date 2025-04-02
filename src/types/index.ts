@@ -68,6 +68,13 @@ export type Booking = {
   ticketPrice: number;
   bookedOn: Date;
   date: Date;
+  rated: boolean;
+  restaurantName: string;
+  occasionName: string;
+  fromTime: string;
+  toTime: string;
+  noOfPeople: number;
+  packageName: string;
 };
 
 export type VenueBooking = {

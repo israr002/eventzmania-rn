@@ -21,9 +21,6 @@ export const getNearestRestaurants = async (
 };
 
 export const getUpcomingEvents = async (data?: number) => {
-  console.log(
-    `${API_ENDPOINTS.GET_UPCOMING_EVENTS}${data ? "?restaurantId=" + data : ""}`
-  );
   return apiCallService(
     "GET",
     `${API_ENDPOINTS.GET_UPCOMING_EVENTS}${data ? "?restaurantId=" + data : ""}`

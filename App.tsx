@@ -1,29 +1,33 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-
 import { NavigationContainer } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import AuthStack from "navigation/AuthStack";
-import React from "react";
+import Loader from "components/common/Loader";
+import { useAuthStore } from "hooks/useAuthStore";
+import AppNavigator from "navigation/AppNavigator";
+import React, { useEffect, useState } from "react";
 
 function App(): React.JSX.Element {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const queryClient = new QueryClient();
 
+  const [loading, setLoading] = useState<boolean>(true);
+  const { initializeAuth } = useAuthStore();
 
+  useEffect(() => {
+    initializeApp();
+  }, []);
+
+  const initializeApp = async () => {
+    await initializeAuth();
+    setLoading(false);
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
-
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer>
-        <AuthStack initialScreen="Onboarding" />
-      </NavigationContainer>
+      <AppNavigator />
     </QueryClientProvider>
-
   );
 }
 

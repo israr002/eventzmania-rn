@@ -1,8 +1,9 @@
 export interface DatePickerProps {
-  date: Date | undefined;
-  placeHolder: string;
-  setDate: (date: Date | undefined) => void;
+  name: string;
+  mode: string;
+  placeholder?: string;
+  defaultValue?: Date;
   min?: Date;
   max?: Date;
-  mode: string;
+  disable?: boolean;
 }

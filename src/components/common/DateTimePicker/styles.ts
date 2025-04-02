@@ -4,26 +4,32 @@ import { Metrics } from "styles/metrics";
 
 export const styles = StyleSheet.create({
   container: {
-    marginVertical: Metrics.margin.tiny,
+    marginVertical: Metrics.margin.tiny
   },
-  inputContainer: {
-    flexDirection: "row",
-    borderColor: Colors.White,
-    borderWidth: 1,
-    borderRadius: Metrics.radius.tiny,
-    alignItems: "center",
-    paddingHorizontal: Metrics.padding.small,
+  error: {
+    color: Colors.Red,
+    fontSize: Metrics.xxSmall,
+    marginTop: Metrics.margin.xTiny
   },
   icon: {
     height: Metrics.medium,
-    width: Metrics.medium,
     tintColor: Colors.White,
+    width: Metrics.medium
     //marginRight: Metrics.margin.tiny,
   },
   input: {
-    height: Metrics.xLarge,
-    paddingVertical: 0,
     flex: 1,
+    height: Metrics.xLarge,
     justifyContent: "center",
+    paddingVertical: 0
   },
+  inputContainer: {
+    alignItems: "center",
+    borderColor: Colors.White,
+    borderRadius: Metrics.radius.tiny,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingHorizontal: Metrics.padding.small,
+    paddingLeft: Metrics.padding.large
+  }
 });

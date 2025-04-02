@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import EmailSvg from "assets/images/icons/email.svg";
 import LocationSvg from "assets/images/icons/location.svg";
 import UserSvg from "assets/images/icons/user.svg";
@@ -11,12 +12,16 @@ import { useAuth } from "hooks/useAuth";
 import { useAuthStore } from "hooks/useAuthStore";
 import { useDropdown } from "hooks/useDropdown";
 import { useZodSchema } from "hooks/useZodSchema";
+import {
+  AppNavigationProp,
+  AppStackParamList
+} from "navigation/AppNavigator/types";
 import React, { useEffect, useState } from "react";
 import {
   FormProvider,
   SubmitHandler,
   useForm,
-  useWatch,
+  useWatch
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
@@ -42,16 +47,19 @@ const SignUpScreen: React.FC = () => {
   const { t } = useTranslation();
   const { signUpSchema } = useZodSchema();
   const { setLoggedIn } = useAuthStore();
+  const navigation = useNavigation<AppNavigationProp>();
+  const route = useRoute<RouteProp<AppStackParamList, "SignUp">>();
+
   //const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const methods = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(signUpSchema)
   });
   const { handleSubmit, control } = methods;
 
   const selectedState = useWatch({
     control,
-    name: "state",
+    name: "state"
   });
 
   useEffect(() => {
@@ -66,51 +74,54 @@ const SignUpScreen: React.FC = () => {
 
   const getStates = async () => {
     getStatesMutation.mutate(undefined, {
-      onSuccess: (res) => {
-        console.log(res.data);
-        setStates(res.data.map((i) => ({ label: i.name, value: i.id })));
+      onSuccess: res => {
+        setStates(res.data.map(i => ({ label: i.name, value: i.id })));
       },
-      onError: (err) => {
+      onError: err => {
         console.log("request failed:", err);
-      },
+      }
     });
   };
 
   const getCities = async (id: number) => {
     getCitiesMutation.mutate(id, {
-      onSuccess: (res) => {
-        setCities(res.data.map((i) => ({ label: i.name, value: i.id })));
+      onSuccess: res => {
+        setCities(res.data.map(i => ({ label: i.name, value: i.id })));
       },
-      onError: (err) => {
+      onError: err => {
         console.log("request failed:", err);
-      },
+      }
     });
   };
 
-  const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
+  const onSubmit: SubmitHandler<SignUpFormData> = async data => {
     const uploadData = new FormData();
     uploadData.append("firstName", data.firstName);
     uploadData.append("lastName", data.lastName);
     uploadData.append("email", data.email);
+    uploadData.append("mobileNo", route.params.mobileNo);
     uploadData.append("cityId", data.city.value);
-    uploadData.append(
-      "profileImage",
-      imageData.fileName
-        ? {
-            type: imageData.type,
-            uri: imageData.uri,
-            name: imageData.fileName,
-          }
-        : ""
-    );
+    if (imageData) {
+      uploadData.append(
+        "profileImage",
+        imageData.fileName
+          ? {
+              type: imageData.type,
+              uri: imageData.uri,
+              name: imageData.fileName
+            }
+          : ""
+      );
+    }
+
     signUpMutation.mutate(uploadData, {
-      onSuccess: async (res) => {
+      onSuccess: async res => {
         setLoggedIn(true, res?.data?.accessToken, res?.data?.refreshToken);
-        naviga;
+        navigation.navigate("Tabs", { screen: "Home" });
       },
-      onError: (err) => {
-        console.log("Login failed:", err);
-      },
+      onError: err => {
+        console.log("Registration failed:", err);
+      }
     });
   };
 
@@ -164,8 +175,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Black,
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: Metrics.padding.xLarge,
-  },
+    paddingHorizontal: Metrics.padding.xLarge
+  }
 });
 
 export default SignUpScreen;

@@ -20,7 +20,6 @@ export const API_ENDPOINTS = {
   GET_RESTAURANTS: "/get-all-restaurants",
   GET_NEAREST_RESTAURANTS: "/get-nearest-restaurants",
   GET_UPCOMING_EVENTS: "/get-all-upcoming-events",
-  GET_UPCOMING_RESTAURANT_EVENTS: "/get-upcoming-restaurant-events",
   GET_RESTAURANT_DETAILS: "/get-restaurant-details",
   GET_RESTAURANT_IMAGES: "/get-restaurant-images",
   GET_RESTAURANT_CALENDAR: "/get-restaurant-calendar",
@@ -33,4 +32,6 @@ export const API_ENDPOINTS = {
   RATE_RESTAURANT: "/rate-restaurant",
   BOOK_RESTAURANT_BANQUET: "/book-restaurant-banquet",
   APPLY_COUPON: "/apply-coupon",
+  VERIFY_TICKET_PAYMENT: "/verify-ticket-payment",
+  VERIFY_BANQUET_PAYMENT: "/verify-banquet-payment"
 };
