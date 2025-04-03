@@ -1,15 +1,94 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# EventzMania
 
-# Getting Started
+EventzMania is a mobile application designed to help users explore restaurants, book venues for special occasions, and purchase event tickets. Users can browse restaurant listings, view food packages, and check event schedules. Additionally, users can interact with social content by liking and commenting on posts shared by restaurants. Payments are handled via Razorpay for seamless transactions.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Important Libraries Used
 
-## Step 1: Start the Metro Server
+###  State Management
+- `zustand`: Lightweight state management.
+- `@tanstack/react-query`: Handling API requests and caching data efficiently.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### Navigation
+- `@react-navigation/native`, `@react-navigation/native-stack`, `@react-navigation/bottom-tabs`: For handling navigation between screens.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### Forms & Validation
+- `react-hook-form`: Form handling.
+- `@hookform/resolvers`: Resolver for schema validation.
+- `zod`: Schema validation.
 
+### Location & Maps
+- `@react-native-community/geolocation`: Fetching user's location.
+- `react-native-maps`: Displaying restaurants and event locations.
+
+### Date & Calendar
+- `react-native-calendars`: Displaying event dates.
+- `react-native-calendar-strip`: Timeline view for events.
+- `moment`: Date manipulation.
+
+### Payments
+- `react-native-razorpay`: Integrating Razorpay for seamless payments.
+
+## Project Flow
+
+### Guest Mode
+- **Feed Screen** - Displays posts shared by restaurants.
+- **Nearby Restaurants** - Shows restaurants near the user, including details like food packages and restaurant calendar.
+- **Event List** - Displays all available events.
+
+### Logged-In User Flow
+#### Authentication
+- User enters their phone number.
+- OTP verification is required.
+- Existing users are redirected to the Home screen.
+- New users are redirected to the Signup screen to complete their profile.
+
+#### Feed
+- Users can like posts.
+- Users can add and reply to comments.
+- Users can like others' comments.
+
+#### Restaurant and Event Exploration
+- View restaurant details, food packages, and available events.
+
+#### Booking a Restaurant for an Occasion
+- Users can book a restaurant for weddings, birthdays, or other occasions.
+- Users can select food packages.
+- Payment is processed via Razorpay.
+
+#### Event Ticket Booking
+- Users can book tickets for events like stand-up comedy shows or music programs hosted in the Restaurant.
+- Payment is processed via Razorpay.
+
+#### Profile Section
+- Users can edit their profile.
+- View booking history.
+
+## Running the Project
+
+### Prerequisites
+Make sure you have the following installed:
+- **Node.js** (Latest LTS version recommended)
+- **Yarn or npm**
+- **React Native CLI**
+- **Android Studio** (for Android development)
+- **Xcode** (for iOS development, macOS only)
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/israr002/EventzMania.git
+cd EventzMania
+```
+
+### Step 2: Install Dependencies
+```bash
+# using npm
+npm install
+
+# OR using Yarn
+yarn install
+```
+
+### Step 3: Start the Metro Server
 ```bash
 # using npm
 npm start
@@ -18,12 +97,8 @@ npm start
 yarn start
 ```
 
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
+### Step 4: Run the Application
+#### For Android
 ```bash
 # using npm
 npm run android
@@ -32,8 +107,7 @@ npm run android
 yarn android
 ```
 
-### For iOS
-
+#### For iOS (Mac Only)
 ```bash
 # using npm
 npm run ios
@@ -42,38 +116,3 @@ npm run ios
 yarn ios
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
