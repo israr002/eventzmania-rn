@@ -1,19 +1,4 @@
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import Button from "components/common/Button";
-import DateTimePicker from "components/common/DateTimePicker";
-import Dropdown from "components/common/Dropdown";
-import Loader from "components/common/Loader";
-import { useBookings } from "hooks/useBookings";
-import { useCheckAuth } from "hooks/useCheckAuth";
-import { useDropdown } from "hooks/useDropdown";
-import { useRestaurants } from "hooks/useRestaurants";
-import {
-  AppNavigationProp,
-  AppStackParamList
-} from "navigation/AppNavigator/types";
 import React, { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import {
   Alert,
   ScrollView,
@@ -21,14 +6,30 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import Config from "react-native-config";
-import RazorpayCheckout, { CheckoutOptions } from "react-native-razorpay";
-import { Colors } from "styles/colors";
-import { Metrics } from "styles/metrics";
+
 import { dropdownItem } from "types";
+import {
+  AppNavigationProp,
+  AppStackParamList,
+} from "navigation/AppNavigator/types";
+import { useDropdown } from "hooks/useDropdown";
+import { useRestaurants } from "hooks/useRestaurants";
+import { Colors } from "styles/colors";
+import { useBookings } from "hooks/useBookings";
+import { useCheckAuth } from "hooks/useCheckAuth";
+import Dropdown from "components/common/Dropdown";
+import DateTimePicker from "components/common/DateTimePicker";
+import Button from "components/common/Button";
+import { Metrics } from "styles/metrics";
+import Loader from "components/common/Loader";
+import { useTranslation } from "react-i18next";
+import RazorpayCheckout, { CheckoutOptions } from "react-native-razorpay";
+import { FormProvider, useForm } from "react-hook-form";
 
 const BookRestaurantBanquet: React.FC = () => {
   const [existingBookings, setExistingBookings] = useState([]);
@@ -50,7 +51,7 @@ const BookRestaurantBanquet: React.FC = () => {
   const {
     applyCodeMutation,
     bookRestaurantBanquetMutation,
-    verifyBanquetPaymentMutation
+    verifyBanquetPaymentMutation,
   } = useBookings();
   const { checkAuth } = useCheckAuth();
   const { t } = useTranslation();
@@ -76,36 +77,36 @@ const BookRestaurantBanquet: React.FC = () => {
 
   const getRequiredData = async () => {
     fetchPackage(restaurant.id, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         setPackages(res.data);
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
     fetchCalendar(restaurant.id, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         const calenderData = res.data.map((i: any) => ({
           ...i,
-          dots: [{ color: Colors.Primary }]
+          dots: [{ color: Colors.Primary }],
         }));
         setExistingBookings(calenderData);
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
     fetchOccasions(undefined, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         const occasionData = res.data.map((i: any) => ({
           label: i.name,
-          value: i.id
+          value: i.id,
         }));
         setOccasions(occasionData);
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
@@ -113,34 +114,34 @@ const BookRestaurantBanquet: React.FC = () => {
     const data = {
       restaurantId: restaurant.id,
       couponCode: couponCode,
-      amount: (noOfPeople ?? 0) * (selectedPackage?.pricePerPlate ?? 0)
+      amount: (noOfPeople ?? 0) * (selectedPackage?.pricePerPlate ?? 0),
     };
     checkAuth(() =>
       applyCoupon(data, {
-        onSuccess: res => {
+        onSuccess: (res) => {
           if (res && Object.keys(res.data.data).length > 0) {
             setCoupon(res.data);
           }
         },
-        onError: err => {
+        onError: (err) => {
           console.log("Request Failed:", err);
-        }
+        },
       })
     );
   };
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     const amountData = {
       finalAmount:
         restaurant?.basePrice +
         (selectedPackage?.pricePerPlate ?? 0) * (noOfPeople ?? 0) -
         restaurant?.basePrice * (restaurant.discountPercent / 100) -
-        (coupon.discount ?? 0)
+        (coupon.discount ?? 0),
     };
     checkAuth(() =>
       bookBanquet(amountData, {
-        onSuccess: res => {
-          const options: CheckoutOptions = {
+        onSuccess: (res) => {
+          var options: CheckoutOptions = {
             name: restaurant.name,
             image: restaurant.profileImage,
             description: `Payment for ${restaurant.name}`,
@@ -151,13 +152,13 @@ const BookRestaurantBanquet: React.FC = () => {
             prefill: {
               email: res.data.user.email,
               contact: res.data.user.mobileNo,
-              name: res.data.user.name
+              name: res.data.user.name,
             },
-            theme: { color: Colors.Primary }
+            theme: { color: Colors.Primary },
           };
 
           RazorpayCheckout.open(options)
-            .then(async transaction => {
+            .then(async (transaction) => {
               const transactionBody = {
                 restaurantId: restaurant.id,
                 date: new Date(date),
@@ -179,29 +180,32 @@ const BookRestaurantBanquet: React.FC = () => {
                   restaurant?.basePrice * (restaurant.discountPercent / 100) -
                   (coupon.discount ?? 0),
                 orderId: res?.data?.order?.id,
-                transaction
+                transaction,
               };
               verifyBanquetPaymentMutation.mutate(transactionBody, {
-                onSuccess: async resp => {
+                onSuccess: async (resp) => {
                   Alert.alert("Information", "Your Booking is Successful", [
                     {
                       text: "OK",
-                      onPress: () => navigation.navigate("MyBookings")
-                    }
+                      onPress: () =>
+                        navigation.navigate("MyBookings", {
+                          selectedType: "RESTAURANT",
+                        }),
+                    },
                   ]);
                 },
-                onError: error => {
+                onError: (error) => {
                   console.log("Request failed:", error);
-                }
+                },
               });
             })
-            .catch(async error => {
+            .catch(async (error) => {
               console.log({ error });
             });
         },
-        onError: err => {
+        onError: (err) => {
           console.log("Request Failed:", err);
-        }
+        },
       })
     );
   };
@@ -210,7 +214,7 @@ const BookRestaurantBanquet: React.FC = () => {
     navigation.goBack();
   };
 
-  const onSelectDate = date => {
+  const onSelectDate = (date) => {
     setDate(date);
   };
 
@@ -225,7 +229,7 @@ const BookRestaurantBanquet: React.FC = () => {
     }
   };
 
-  const selectPackage = item => {
+  const selectPackage = (item) => {
     if (selectedPackage && selectedPackage?.packageId === item.packageId) {
       setSelectedPackage();
     } else {
@@ -237,7 +241,7 @@ const BookRestaurantBanquet: React.FC = () => {
     setCouponCode(text);
   };
 
-  const disabledDates = existingBookings?.map(i => i.date);
+  const disabledDates = existingBookings?.map((i) => i.date);
 
   return (
     <>
@@ -275,7 +279,7 @@ const BookRestaurantBanquet: React.FC = () => {
               backgroundColor: Colors.Black,
               marginBottom: 10,
               borderWidth: 1,
-              borderColor: Colors.Grey
+              borderColor: Colors.Grey,
             }}
           />
           <FormProvider {...methods}>
@@ -310,9 +314,9 @@ const BookRestaurantBanquet: React.FC = () => {
           />
 
           <Text style={styles.label}>{t("select-package")}</Text>
-          {packages?.map(i => {
+          {packages?.map((i) => {
             return (
-              <View style={styles.radioContainer}>
+              <View style={styles.radioContainer} key={i.packageName}>
                 <TouchableOpacity
                   style={styles.outerCircle}
                   onPress={() => selectPackage(i)}
@@ -422,109 +426,109 @@ const BookRestaurantBanquet: React.FC = () => {
 };
 
 export const styles = StyleSheet.create({
-  applyButton: {
-    borderColor: Colors.Primary,
-    borderRadius: Metrics.radius.small,
-    borderWidth: 1,
-    height: Metrics.xLarge,
-    justifyContent: "center",
-    marginLeft: Metrics.margin.small,
-    marginTop: Metrics.margin.tiny,
-    paddingHorizontal: Metrics.padding.xxSmall
-  },
-  applyButtonText: {
-    color: Colors.Primary
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    marginBottom: Metrics.margin.large
-  },
-  couponTextInputContainer: {
-    flexDirection: "row"
-  },
   detailsMainContainer: {
     backgroundColor: Colors.Primary,
     paddingHorizontal: Metrics.padding.base,
-    paddingVertical: Metrics.padding.large
-  },
-  horizontalLine: {
-    backgroundColor: Colors.White,
-    height: 1,
-    marginVertical: Metrics.margin.tiny
-  },
-  innerCircle: {
-    backgroundColor: Colors.Primary,
-    borderRadius: Metrics.radius.base,
-    height: Metrics.xxSmall,
-    width: Metrics.xxSmall
-  },
-  input: {
-    alignItems: "center",
-    borderColor: Colors.White,
-    borderRadius: Metrics.radius.tiny,
-    borderWidth: 1,
-    color: Colors.White,
-    flex: 1,
-    height: Metrics.xLarge,
-    marginTop: Metrics.margin.tiny,
-    paddingHorizontal: Metrics.padding.small,
-    paddingLeft: Metrics.padding.large,
-    paddingVertical: 0
-  },
-  inputContainer: {
-    backgroundColor: Colors.Black,
-    padding: Metrics.padding.base
+    paddingVertical: Metrics.padding.large,
   },
   label: {
     color: Colors.White,
-    marginTop: Metrics.margin.small
+    marginTop: Metrics.margin.small,
   },
-  leftButton: {
-    flex: 1,
-    marginRight: Metrics.margin.xTiny
+  text: {
+    color: Colors.White,
   },
-  outerCircle: {
+  inputContainer: {
+    padding: Metrics.padding.base,
+    backgroundColor: Colors.Black,
+  },
+  input: {
+    height: Metrics.xLarge,
+    paddingVertical: 0,
     alignItems: "center",
     borderColor: Colors.White,
-    borderRadius: Metrics.radius.base,
     borderWidth: 1,
+    borderRadius: Metrics.radius.tiny,
+    paddingHorizontal: Metrics.padding.small,
+    marginTop: Metrics.margin.tiny,
+    color: Colors.White,
+    flex: 1,
+    paddingLeft: Metrics.padding.large,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    marginBottom: Metrics.margin.large,
+  },
+  leftButton: {
+    marginRight: Metrics.margin.xTiny,
+    flex: 1,
+  },
+  rightButton: {
+    marginLeft: Metrics.margin.xTiny,
+    flex: 1,
+  },
+  radioContainer: {
+    flexDirection: "row",
+    margin: Metrics.margin.xxSmall,
+    alignItems: "center",
+  },
+  outerCircle: {
     height: Metrics.base,
-    justifyContent: "center",
+    width: Metrics.base,
+    borderColor: Colors.White,
+    borderWidth: 1,
+    borderRadius: Metrics.radius.base,
     marginRight: Metrics.margin.xxSmall,
-    width: Metrics.base
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  innerCircle: {
+    height: Metrics.xxSmall,
+    width: Metrics.xxSmall,
+    backgroundColor: Colors.Primary,
+    borderRadius: Metrics.radius.base,
+  },
+  radioText: {
+    color: Colors.White,
   },
   priceContainer: {
-    borderColor: Colors.Grey,
+    padding: Metrics.padding.xxSmall,
     borderWidth: 1,
+    borderColor: Colors.Grey,
     marginBottom: Metrics.margin.tiny,
     marginTop: Metrics.margin.base,
-    padding: Metrics.padding.xxSmall
   },
   priceDetailsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: Metrics.margin.xTiny
+    marginVertical: Metrics.margin.xTiny,
   },
   priceText: {
     color: Colors.White,
+    fontWeight: "bold",
     fontSize: 16,
-    fontWeight: "bold"
   },
-  radioContainer: {
-    alignItems: "center",
+  couponTextInputContainer: {
     flexDirection: "row",
-    margin: Metrics.margin.xxSmall
   },
-  radioText: {
-    color: Colors.White
+  applyButton: {
+    borderWidth: 1,
+    borderColor: Colors.Primary,
+    marginLeft: Metrics.margin.small,
+    paddingHorizontal: Metrics.padding.xxSmall,
+    justifyContent: "center",
+    height: Metrics.xLarge,
+    marginTop: Metrics.margin.tiny,
+    borderRadius: Metrics.radius.small,
   },
-  rightButton: {
-    flex: 1,
-    marginLeft: Metrics.margin.xTiny
+  applyButtonText: {
+    color: Colors.Primary,
   },
-  text: {
-    color: Colors.White
-  }
+  horizontalLine: {
+    height: 1,
+    backgroundColor: Colors.White,
+    marginVertical: Metrics.margin.tiny,
+  },
 });
 
 export default BookRestaurantBanquet;

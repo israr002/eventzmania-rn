@@ -1,17 +1,16 @@
-import CloseSvg from "assets/images/icons/close.svg";
-import StarSvg from "assets/images/icons/star.svg";
-import Button from "components/common/Button";
 import React, { useState } from "react";
 import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
-import { Colors } from "styles/colors";
-
 import { styles } from "./styles";
 import { RatingModalProps } from "./types";
+import { Colors } from "styles/colors";
+import Button from "components/common/Button";
+import CloseSvg from "assets/images/icons/close.svg";
+import StarSvg from "assets/images/icons/star.svg";
 
 const RatingModal: React.FC<RatingModalProps> = ({
   visible,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const stars = [1, 2, 3, 4, 5];
   const [rating, setRating] = useState<number>(0);
@@ -42,7 +41,8 @@ const RatingModal: React.FC<RatingModalProps> = ({
               Give us a quick rating so that we know if you like us?
             </Text>
             <View style={styles.row}>
-              {stars.map(i => {
+              {stars.map((i) => {
+                console.log(rating);
                 return (
                   <TouchableOpacity onPress={() => setRating(i)} key={i}>
                     <Image
@@ -50,11 +50,15 @@ const RatingModal: React.FC<RatingModalProps> = ({
                       style={[
                         styles.starIcon,
                         {
-                          tintColor: i <= rating ? Colors.Yellow : Colors.White
-                        }
+                          tintColor: i <= rating ? Colors.Yellow : Colors.White,
+                        },
                       ]}
                     />
-                   
+                    {/* <StarSvg
+                      height={40}
+                      width={40}
+                      fill={i <= rating ? Colors.Yellow : Colors.White}
+                    /> */}
                   </TouchableOpacity>
                 );
               })}

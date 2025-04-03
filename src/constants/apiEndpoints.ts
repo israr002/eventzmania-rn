@@ -33,5 +33,5 @@ export const API_ENDPOINTS = {
   BOOK_RESTAURANT_BANQUET: "/book-restaurant-banquet",
   APPLY_COUPON: "/apply-coupon",
   VERIFY_TICKET_PAYMENT: "/verify-ticket-payment",
-  VERIFY_BANQUET_PAYMENT: "/verify-banquet-payment"
+  VERIFY_BANQUET_PAYMENT: "/verify-banquet-payment",
 };

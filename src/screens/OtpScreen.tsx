@@ -2,11 +2,6 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { VerifyOtpRequest } from "api/authApi";
 import Button from "components/common/Button";
 import { useAuth } from "hooks/useAuth";
-import { useAuthStore } from "hooks/useAuthStore";
-import {
-  AppNavigationProp,
-  AppStackParamList
-} from "navigation/AppNavigator/types";
 import React, { useEffect, useRef, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -14,8 +9,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
+import { useAuthStore } from "hooks/useAuthStore";
+import {
+  AppNavigationProp,
+  AppStackParamList,
+} from "navigation/AppNavigator/types";
 
 type OtpFormData = {
   otp: string;
@@ -52,7 +52,7 @@ const OtpScreen: React.FC = () => {
       clearInterval(resendOtpTimerInterval.current);
     }
     resendOtpTimerInterval.current = setInterval(() => {
-      setResendButtonDisabledTime(prev => (prev > 0 ? prev - 1 : 0));
+      setResendButtonDisabledTime((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
   };
 
@@ -77,10 +77,10 @@ const OtpScreen: React.FC = () => {
   const verifyOtp: SubmitHandler<OtpFormData> = async () => {
     const requestData: VerifyOtpRequest = {
       mobileNo: mobileNo,
-      otp: otp.join("")
+      otp: otp.join(""),
     };
     verifyOtpMutation.mutate(requestData, {
-      onSuccess: async res => {
+      onSuccess: async (res) => {
         console.log("verification successful:", res);
         if (res) {
           if (!isRegistered) {
@@ -91,9 +91,9 @@ const OtpScreen: React.FC = () => {
           }
         }
       },
-      onError: err => {
+      onError: (err) => {
         console.log("Login failed:", err);
-      }
+      },
     });
   };
 
@@ -101,13 +101,13 @@ const OtpScreen: React.FC = () => {
     sendOtpMutation.mutate(
       { mobileNo },
       {
-        onSuccess: res => {
+        onSuccess: (res) => {
           setResendButtonDisabledTime(res?.data?.resendTimeInSeconds);
           startResendOtpTimer();
         },
-        onError: err => {
+        onError: (err) => {
           console.log("request failed:", err);
-        }
+        },
       }
     );
   };
@@ -119,12 +119,12 @@ const OtpScreen: React.FC = () => {
           {otp.map((digit, index) => (
             <TextInput
               key={index}
-              ref={ref => (otpInputs.current[index] = ref)}
+              ref={(ref) => (otpInputs.current[index] = ref)}
               style={styles.otpBox}
               value={digit}
               maxLength={1}
               keyboardType="number-pad"
-              onChangeText={value => handleOtpChange(value, index)}
+              onChangeText={(value) => handleOtpChange(value, index)}
               onKeyPress={({ nativeEvent }) => {
                 if (nativeEvent.key === "Backspace") {
                   handleBackspace(index);
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#20232A",
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 50
+    paddingHorizontal: 50,
   },
   otpBox: {
     borderColor: "#FFFFFF",
@@ -169,32 +169,32 @@ const styles = StyleSheet.create({
     fontSize: 20,
     height: 50,
     textAlign: "center",
-    width: 50
+    width: 50,
   },
   otpContainer: {
     alignSelf: "center",
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 20,
-    width: "100%"
+    width: "100%",
   },
   resend: {
     alignItems: "center",
-    marginTop: 20
+    marginTop: 20,
   },
   resendSubText: {
     color: "white",
-    fontSize: 14
+    fontSize: 14,
   },
   resendText: {
     color: "#ED3269",
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   resendTextContainer: {
     alignItems: "center",
-    flexDirection: "row"
-  }
+    flexDirection: "row",
+  },
 });
 
 export default OtpScreen;

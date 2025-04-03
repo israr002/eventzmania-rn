@@ -59,6 +59,7 @@ const RestaurantPackagesScreen: React.FC = () => {
               <TouchableOpacity
                 style={styles.container}
                 onPress={() => selectPackageIndex(index)}
+                key={item.packageId}
               >
                 <View style={styles.detailRowContainer}>
                   <Text style={styles.headingText}>{item.packageName}</Text>
@@ -84,7 +85,7 @@ const RestaurantPackagesScreen: React.FC = () => {
                     <View style={styles.table}>
                       {item.packageItems?.map((i) => {
                         return (
-                          <View style={styles.tableRow}>
+                          <View style={styles.tableRow} key={i.menuType}>
                             <View style={styles.tableCell}>
                               <Text style={styles.text}>{i.menuType}</Text>
                             </View>

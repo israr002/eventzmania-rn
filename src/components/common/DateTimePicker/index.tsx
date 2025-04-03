@@ -1,14 +1,13 @@
+import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import moment from "moment";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import { DatePickerProps } from "./types";
+import { styles } from "./styles";
 import CalendarSvg from "assets/images/icons/calendar.svg";
 import ClockSvg from "assets/images/icons/clock.svg";
-import moment from "moment";
-import React from "react";
-import { Controller, FieldValues, useFormContext } from "react-hook-form";
-import { Text, TouchableOpacity, View } from "react-native";
 import { Colors } from "styles/colors";
-
-import { styles } from "./styles";
-import { DatePickerProps } from "./types";
+import { Controller, FieldValues, useFormContext } from "react-hook-form";
 
 const DateTimePicker: React.FC<DatePickerProps> = ({
   name,
@@ -16,10 +15,10 @@ const DateTimePicker: React.FC<DatePickerProps> = ({
   defaultValue,
   min,
   max,
-  mode
+  mode,
 }) => {
   const {
-    formState: { errors }
+    formState: { errors },
   } = useFormContext<FieldValues>();
 
   const selectDate = (onChange: (value: any) => void, value: Date | null) => {
@@ -32,7 +31,7 @@ const DateTimePicker: React.FC<DatePickerProps> = ({
         if (selectedDate) {
           onChange(selectedDate);
         }
-      }
+      },
     });
   };
 

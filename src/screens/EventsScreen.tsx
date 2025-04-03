@@ -1,23 +1,23 @@
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import {
   RouteProp,
   useIsFocused,
   useNavigation,
-  useRoute
+  useRoute,
 } from "@react-navigation/native";
-import Loader from "components/common/Loader";
-import NoData from "components/common/NoData";
+import { EventDetails } from "types";
+import { Colors } from "styles/colors";
 import EventCard from "components/EventCard";
-import { useRestaurants } from "hooks/useRestaurants";
+import NoData from "components/common/NoData";
+import { useTranslation } from "react-i18next";
+import Loader from "components/common/Loader";
 import { AppNavigationProp } from "navigation/AppNavigator/types";
 import {
   TabBarNavigationProp,
-  TabBarParamList
+  TabBarParamList,
 } from "navigation/TabNavigator/types";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { FlatList, StyleSheet, View } from "react-native";
-import { Colors } from "styles/colors";
-import { EventDetails } from "types";
+import { useRestaurants } from "hooks/useRestaurants";
 
 const EventsScreen: React.FC = () => {
   const [events, setEvents] = useState<EventDetails[]>([]);
@@ -38,13 +38,13 @@ const EventsScreen: React.FC = () => {
     fetchEvents(
       route.params?.restaurantId ? route.params.restaurantId : undefined,
       {
-        onSuccess: res => {
+        onSuccess: (res) => {
           console.log(res);
           setEvents(res.data);
         },
-        onError: err => {
+        onError: (err) => {
           console.log("request failed:", err);
-        }
+        },
       }
     );
   };
@@ -64,7 +64,7 @@ const EventsScreen: React.FC = () => {
             renderItem={({ item }) => (
               <EventCard event={item} onPress={navigateToDetails} />
             )}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={(item) => `${item.id}`}
             ListEmptyComponent={<NoData message={t("no-events-available")} />}
           />
         </View>
@@ -76,8 +76,8 @@ const EventsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: Colors.Black,
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
 export default EventsScreen;

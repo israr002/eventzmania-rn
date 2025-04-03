@@ -1,22 +1,21 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useAuthStore } from "hooks/useAuthStore";
-import TabNavigator from "navigation/TabNavigator";
 import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { AppStackParamList } from "./types";
+import TabNavigator from "navigation/TabNavigator";
+import RestaurantDetailsScreen from "screens/RestaurantDetailsScreen";
+import RestaurantCalendarScreen from "screens/RestaurantCalendarScreen";
+import { Colors } from "styles/colors";
+import RestaurantPackagesScreen from "screens/RestaurantPackagesScreen";
 import BookingsScreen from "screens/BookingsScreen";
-import BookRestaurantBanquet from "screens/BookRestaurantBanquet";
 import BookTicket from "screens/BookTicket";
 import EditProfile from "screens/EditProfile";
+import OtpScreen from "screens/OtpScreen";
 import LoginScreen from "screens/LoginScreen";
 import OnboardingScreen from "screens/OnboardingScreen";
-import OtpScreen from "screens/OtpScreen";
-import RestaurantCalendarScreen from "screens/RestaurantCalendarScreen";
-import RestaurantDetailsScreen from "screens/RestaurantDetailsScreen";
-import RestaurantPackagesScreen from "screens/RestaurantPackagesScreen";
 import SignUpScreen from "screens/SignUpScreen";
-import { Colors } from "styles/colors";
-
-import { AppStackParamList } from "./types";
+import { NavigationContainer } from "@react-navigation/native";
+import { useAuthStore } from "hooks/useAuthStore";
+import BookRestaurantBanquet from "screens/BookRestaurantBanquet";
 
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
@@ -38,7 +37,7 @@ const AppNavigator: React.FC = () => {
         initialRouteName={initialScreen}
         screenOptions={{
           headerTintColor: Colors.White,
-          headerStyle: { backgroundColor: Colors.Black }
+          headerStyle: { backgroundColor: Colors.Black },
         }}
       >
         <AppStack.Screen
@@ -61,7 +60,7 @@ const AppNavigator: React.FC = () => {
           component={SignUpScreen}
           options={{
             title: "Register",
-            headerLeft: () => null
+            headerLeft: () => null,
           }}
         />
         <AppStack.Screen

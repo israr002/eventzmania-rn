@@ -1,11 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { API_ENDPOINTS } from "constants/apiEndpoints";
+import { useAuthStore } from "hooks/useAuthStore";
 import { Alert } from "react-native";
 import Config from "react-native-config";
 
 const api = axios.create({
-  baseURL: Config.BASEURL
+  baseURL: Config.BASEURL,
+  //baseURL: "http://192.168.1.99:4000/",
 });
 
 // Request Interceptor
@@ -18,13 +20,13 @@ api.interceptors.request.use(
     }
     return config;
   },
-  error => Promise.reject(error)
+  (error) => Promise.reject(error)
 );
 
 // Response Interceptor
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
-  async error => {
+  async (error) => {
     if (error?.response?.status === 401) {
       const refreshToken = await AsyncStorage.getItem("eventRefreshToken");
       if (!refreshToken) {
@@ -37,7 +39,7 @@ api.interceptors.response.use(
 
       try {
         const response = await axios.post(API_ENDPOINTS.REFRESH_TOKEN, {
-          token: refreshToken
+          token: refreshToken,
         });
         await AsyncStorage.setItem(
           "eventAccessToken",

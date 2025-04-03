@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthState {
   hasSeenOnboarding: boolean;
@@ -19,7 +19,7 @@ interface AuthState {
   logout: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>(set => ({
+export const useAuthStore = create<AuthState>((set) => ({
   hasSeenOnboarding: false,
   isGuest: false,
   isLoggedIn: false,
@@ -32,13 +32,13 @@ export const useAuthStore = create<AuthState>(set => ({
       guestStatus,
       loggedInStatus,
       accessToken,
-      refreshToken
+      refreshToken,
     ] = await Promise.all([
       AsyncStorage.getItem("hasSeenOnboarding"),
       AsyncStorage.getItem("isGuestLoggedIn"),
       AsyncStorage.getItem("isLoggedIn"),
       AsyncStorage.getItem("eventAccessToken"),
-      AsyncStorage.getItem("eventRefreshToken")
+      AsyncStorage.getItem("eventRefreshToken"),
     ]);
 
     set({
@@ -46,7 +46,7 @@ export const useAuthStore = create<AuthState>(set => ({
       isGuest: guestStatus === "true",
       isLoggedIn: loggedInStatus === "true",
       accessToken,
-      refreshToken
+      refreshToken,
     });
   },
 
@@ -72,5 +72,5 @@ export const useAuthStore = create<AuthState>(set => ({
     await AsyncStorage.removeItem("eventAccessToken");
     await AsyncStorage.removeItem("eventRefreshToken");
     set({ isLoggedIn: false, accessToken: null, refreshToken: null });
-  }
+  },
 }));

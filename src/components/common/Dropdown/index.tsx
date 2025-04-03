@@ -1,18 +1,18 @@
-import DropdownSvg from "assets/images/icons/down.svg";
 import React, { useState } from "react";
-import { Controller, FieldValues,useFormContext } from "react-hook-form";
 import {
   Keyboard,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
-import { Colors } from "styles/colors";
+import { useFormContext, Controller, FieldValues } from "react-hook-form";
 
+import { Colors } from "styles/colors";
 import { styles } from "./styles";
 import { DropdownProps } from "./types";
+import DropdownSvg from "assets/images/icons/down.svg";
 
 const Dropdown: React.FC<DropdownProps> = ({
   name,
@@ -22,10 +22,10 @@ const Dropdown: React.FC<DropdownProps> = ({
   searchable,
   placeholder,
   items,
-  disable
+  disable,
 }) => {
   const {
-    formState: { errors }
+    formState: { errors },
   } = useFormContext<FieldValues>();
 
   const [listItems, setListItems] = useState(items);
@@ -41,7 +41,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   const onChangeText = (text: string, fieldOnChange: (value: any) => void) => {
-    const filteredItems = items.filter(item =>
+    let filteredItems = items.filter((item) =>
       item.label.toLowerCase().includes(text.toLowerCase())
     );
     setListItems(filteredItems);
@@ -76,7 +76,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     placeholderTextColor={Colors.Grey}
                     onBlur={onBlur}
                     onFocus={onFocus}
-                    onChangeText={text => onChangeText(text, onChange)}
+                    onChangeText={(text) => onChangeText(text, onChange)}
                     editable={!disable}
                   />
                 ) : (
@@ -85,8 +85,8 @@ const Dropdown: React.FC<DropdownProps> = ({
                       style={[
                         styles.inputText,
                         {
-                          color: value?.value > 0 ? Colors.White : Colors.Grey
-                        }
+                          color: value?.value > 0 ? Colors.White : Colors.Grey,
+                        },
                       ]}
                     >
                       {value?.value > 0 ? value?.label : placeholder}
@@ -99,7 +99,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   width={20}
                   style={{
                     transform: [{ rotate: focus ? "180deg" : "0deg" }],
-                    alignSelf: "center"
+                    alignSelf: "center",
                   }}
                 />
               </TouchableOpacity>
@@ -112,7 +112,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   {listItems?.map((item, index) => {
                     return (
                       <TouchableOpacity
-                        key={index.toString()}
+                        key={item.value}
                         style={styles.listItem}
                         onPress={() => onSelect(item, onChange)}
                       >

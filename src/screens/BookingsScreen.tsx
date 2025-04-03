@@ -1,3 +1,4 @@
+import { RouteProp, useRoute } from "@react-navigation/native";
 import Loader from "components/common/Loader";
 import RatingModal from "components/RatingModal";
 import RestaurantBookingCard from "components/RestaurantBookingCard";
@@ -5,6 +6,7 @@ import TicketBookingCard from "components/TicketBookingCard";
 import { useBookings } from "hooks/useBookings";
 import { useCheckAuth } from "hooks/useCheckAuth";
 import { useRestaurants } from "hooks/useRestaurants";
+import { AppStackParamList } from "navigation/AppNavigator/types";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -19,10 +21,13 @@ import { Colors } from "styles/colors";
 import { Metrics } from "styles/metrics";
 
 const BookingsScreen: React.FC = () => {
+  const route = useRoute<RouteProp<AppStackParamList, "MyBookings">>();
   const [restaurantBookings, setRestaurantBookings] = useState([]);
   const [ticketBookings, setTicketBookings] = useState([]);
-  const [selectedTab, setSelectedTab] = useState<number>(1);
-  const [selectedBooking, setSelectedBooking] = useState<VenueBooking>();
+  const [selectedTab, setSelectedTab] = useState<number>(
+    route.params.selectedType === "TICKET" ? 1 : 2
+  );
+  const [selectedBooking, setSelectedBooking] = useState();
   const [showRatingModal, setShowRatingModal] = useState<boolean>(false);
 
   const { getRestaurantBookingsMutation, getTicketBookingsMutation } =

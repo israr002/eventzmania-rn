@@ -1,31 +1,31 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useState } from "react";
+import { View, Alert, StyleSheet } from "react-native";
+import {
+  FormProvider,
+  SubmitHandler,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  AppNavigationProp,
+  AppStackParamList,
+} from "navigation/AppNavigator/types";
+import { ImageData, User } from "types";
+import { useAuth } from "hooks/useAuth";
+import { useDropdown } from "hooks/useDropdown";
+import { useTranslation } from "react-i18next";
+import { useZodSchema } from "hooks/useZodSchema";
+import { Colors } from "styles/colors";
+import { Metrics } from "styles/metrics";
+import ImageSelector from "components/common/ImageSelector";
+import Input from "components/common/Input";
 import EmailSvg from "assets/images/icons/email.svg";
 import LocationSvg from "assets/images/icons/location.svg";
 import UserSvg from "assets/images/icons/user.svg";
 import Button from "components/common/Button";
 import Dropdown from "components/common/Dropdown";
-import ImageSelector from "components/common/ImageSelector";
-import Input from "components/common/Input";
-import { useAuth } from "hooks/useAuth";
-import { useDropdown } from "hooks/useDropdown";
-import { useZodSchema } from "hooks/useZodSchema";
-import {
-  AppNavigationProp,
-  AppStackParamList
-} from "navigation/AppNavigator/types";
-import React, { useEffect, useState } from "react";
-import {
-  FormProvider,
-  SubmitHandler,
-  useForm,
-  useWatch
-} from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { Alert, StyleSheet,View } from "react-native";
-import { Colors } from "styles/colors";
-import { Metrics } from "styles/metrics";
-import { ImageData, User } from "types";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type ProfileFormData = {
   firstName: string;
@@ -40,7 +40,7 @@ const EditProfile: React.FC = () => {
   const route = useRoute<RouteProp<AppStackParamList, "EditProfile">>();
   const { user } = route.params;
   const [imageData, setImageData] = useState<ImageData>({
-    uri: user.profileImage
+    uri: user.profileImage,
   });
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -54,18 +54,18 @@ const EditProfile: React.FC = () => {
     lastName: user.lastName,
     email: user.email,
     state: user.state,
-    city: user.city
+    city: user.city,
   };
 
   const methods = useForm<ProfileFormData>({
     defaultValues,
-    resolver: zodResolver(signUpSchema)
+    resolver: zodResolver(signUpSchema),
   });
   const { handleSubmit, control } = methods;
 
   const selectedState = useWatch({
     control,
-    name: "state"
+    name: "state",
   });
 
   useEffect(() => {
@@ -80,28 +80,28 @@ const EditProfile: React.FC = () => {
 
   const getStates = async () => {
     getStatesMutation.mutate(undefined, {
-      onSuccess: res => {
+      onSuccess: (res) => {
         console.log(res.data);
-        setStates(res.data.map(i => ({ label: i.name, value: i.id })));
+        setStates(res.data.map((i) => ({ label: i.name, value: i.id })));
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
   const getCities = async (id: number) => {
     getCitiesMutation.mutate(id, {
-      onSuccess: res => {
-        setCities(res.data.map(i => ({ label: i.name, value: i.id })));
+      onSuccess: (res) => {
+        setCities(res.data.map((i) => ({ label: i.name, value: i.id })));
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
-  const onSubmit: SubmitHandler<ProfileFormData> = async data => {
+  const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
     const uploadData = new FormData();
     uploadData.append("firstName", data.firstName);
     uploadData.append("lastName", data.lastName);
@@ -113,19 +113,19 @@ const EditProfile: React.FC = () => {
         ? {
             type: imageData.type,
             uri: imageData.uri,
-            name: imageData.fileName
+            name: imageData.fileName,
           }
         : ""
     );
     editProfileMutation.mutate(uploadData, {
-      onSuccess: async res => {
+      onSuccess: async (res) => {
         Alert.alert("Information", "Profile Updated Successfully", [
-          { text: "OK", onPress: () => navigation.goBack() }
+          { text: "OK", onPress: () => navigation.goBack() },
         ]);
       },
-      onError: err => {
+      onError: (err) => {
         console.log("Request failed:", err);
-      }
+      },
     });
   };
 
@@ -177,8 +177,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Black,
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: Metrics.padding.xLarge
-  }
+    paddingHorizontal: Metrics.padding.xLarge,
+  },
 });
 
 export default EditProfile;

@@ -12,7 +12,7 @@ export type AppStackParamList = {
   RestaurantDetails: { restaurantId: number };
   RestaurantCalendar: { restaurantId: number };
   RestaurantPackages: { restaurantId: number };
-  MyBookings: undefined;
+  MyBookings: { selectedType: "TICKET" | "RESTAURANT" };
   BookTicket: { event: EventDetails };
   BookRestaurantBanquet: { restaurant: Restaurant };
   EditProfile: { user: User };

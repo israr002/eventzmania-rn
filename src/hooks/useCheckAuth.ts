@@ -15,7 +15,7 @@ export const useCheckAuth = () => {
         callback();
       } else {
         Alert.alert(
-          t('login-required"'),
+          t("login-required"),
           t("you-need-to-log-in-to-access-this-functionality"),
           [
             { text: t("skip-for-now"), onPress: () => navigation.goBack() },

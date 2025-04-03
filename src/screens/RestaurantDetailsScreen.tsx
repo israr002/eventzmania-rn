@@ -161,7 +161,7 @@ const RestaurantDetailsScreen: React.FC = () => {
                 <Text style={styles.headingText}>{t("amenities")}</Text>
                 {restaurant?.amenities?.map((i) => {
                   return (
-                    <Text style={styles.text}>
+                    <Text style={styles.text} key={i.name}>
                       {i.name}: {i.value}
                     </Text>
                   );

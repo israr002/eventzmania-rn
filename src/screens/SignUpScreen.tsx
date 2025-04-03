@@ -14,14 +14,14 @@ import { useDropdown } from "hooks/useDropdown";
 import { useZodSchema } from "hooks/useZodSchema";
 import {
   AppNavigationProp,
-  AppStackParamList
+  AppStackParamList,
 } from "navigation/AppNavigator/types";
 import React, { useEffect, useState } from "react";
 import {
   FormProvider,
   SubmitHandler,
   useForm,
-  useWatch
+  useWatch,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
@@ -53,13 +53,13 @@ const SignUpScreen: React.FC = () => {
   //const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const methods = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema)
+    resolver: zodResolver(signUpSchema),
   });
   const { handleSubmit, control } = methods;
 
   const selectedState = useWatch({
     control,
-    name: "state"
+    name: "state",
   });
 
   useEffect(() => {
@@ -74,27 +74,27 @@ const SignUpScreen: React.FC = () => {
 
   const getStates = async () => {
     getStatesMutation.mutate(undefined, {
-      onSuccess: res => {
-        setStates(res.data.map(i => ({ label: i.name, value: i.id })));
+      onSuccess: (res) => {
+        setStates(res.data.map((i) => ({ label: i.name, value: i.id })));
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
   const getCities = async (id: number) => {
     getCitiesMutation.mutate(id, {
-      onSuccess: res => {
-        setCities(res.data.map(i => ({ label: i.name, value: i.id })));
+      onSuccess: (res) => {
+        setCities(res.data.map((i) => ({ label: i.name, value: i.id })));
       },
-      onError: err => {
+      onError: (err) => {
         console.log("request failed:", err);
-      }
+      },
     });
   };
 
-  const onSubmit: SubmitHandler<SignUpFormData> = async data => {
+  const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
     const uploadData = new FormData();
     uploadData.append("firstName", data.firstName);
     uploadData.append("lastName", data.lastName);
@@ -108,20 +108,20 @@ const SignUpScreen: React.FC = () => {
           ? {
               type: imageData.type,
               uri: imageData.uri,
-              name: imageData.fileName
+              name: imageData.fileName,
             }
           : ""
       );
     }
 
     signUpMutation.mutate(uploadData, {
-      onSuccess: async res => {
+      onSuccess: async (res) => {
         setLoggedIn(true, res?.data?.accessToken, res?.data?.refreshToken);
         navigation.navigate("Tabs", { screen: "Home" });
       },
-      onError: err => {
+      onError: (err) => {
         console.log("Registration failed:", err);
-      }
+      },
     });
   };
 
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Black,
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: Metrics.padding.xLarge
-  }
+    paddingHorizontal: Metrics.padding.xLarge,
+  },
 });
 
 export default SignUpScreen;

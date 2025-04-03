@@ -4,23 +4,12 @@ import { Metrics } from "styles/metrics";
 
 export const styles = StyleSheet.create({
   container: {
-    marginVertical: Metrics.margin.tiny
+    marginVertical: Metrics.margin.tiny,
   },
   error: {
     color: Colors.Red,
     fontSize: Metrics.xxSmall,
-    marginTop: Metrics.margin.xTiny
-  },
-  flex1: {
-    flex: 1
-  },
-  input: {
-    color: Colors.White,
-    flex: 1,
-    height: Metrics.xLarge,
-    justifyContent: "center",
-    paddingHorizontal: Metrics.margin.xxSmall,
-    paddingVertical: 0
+    marginTop: Metrics.margin.xTiny,
   },
   inputContainer: {
     alignItems: "center",
@@ -28,32 +17,43 @@ export const styles = StyleSheet.create({
     borderRadius: Metrics.radius.tiny,
     borderWidth: 1,
     flexDirection: "row",
-    paddingHorizontal: Metrics.padding.small
+    paddingHorizontal: Metrics.padding.small,
+  },
+  input: {
+    color: Colors.White,
+    height: Metrics.xLarge,
+    paddingVertical: 0,
+    justifyContent: "center",
+    paddingHorizontal: Metrics.margin.xxSmall,
+    flex: 1,
   },
   inputText: {
-    color: Colors.White
+    color: Colors.White,
   },
   listContainer: {
     backgroundColor: Colors.Black,
-    borderColor: Colors.White,
-    borderTopWidth: 0,
     borderWidth: 1,
-    left: 0,
+    borderTopWidth: 0,
+    borderColor: Colors.White,
     maxHeight: 120,
     position: "absolute",
-    right: 0,
+    zIndex: 9999,
     top: Metrics.xLarge,
-    zIndex: 9999
+    right: 0,
+    left: 0,
   },
   listItem: {
     paddingHorizontal: Metrics.padding.small,
-    paddingVertical: Metrics.padding.xTiny
+    paddingVertical: Metrics.padding.xTiny,
   },
   listItemText: {
-    color: Colors.White
+    color: Colors.White,
+  },
+  flex1: {
+    flex: 1,
   },
   touchable: {
     flex: 1,
-    flexDirection: "row"
-  }
+    flexDirection: "row",
+  },
 });

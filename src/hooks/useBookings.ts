@@ -6,36 +6,36 @@ import {
   getRestaurantBookings,
   getTicketBookings,
   verifyBanquetPayment,
-  VerifyTicketPayment
+  VerifyTicketPayment,
 } from "api/bookingsApi";
 
 export const useBookings = () => {
   const getRestaurantBookingsMutation = useMutation({
-    mutationFn: getRestaurantBookings
+    mutationFn: getRestaurantBookings,
   });
 
   const getTicketBookingsMutation = useMutation({
-    mutationFn: getTicketBookings
+    mutationFn: getTicketBookings,
   });
 
   const bookTicketMutation = useMutation({
-    mutationFn: bookTicket
+    mutationFn: bookTicket,
   });
 
   const bookRestaurantBanquetMutation = useMutation({
-    mutationFn: bookRestaurantBanquet
+    mutationFn: bookRestaurantBanquet,
   });
 
   const applyCodeMutation = useMutation({
-    mutationFn: applyCouponCode
+    mutationFn: applyCouponCode,
   });
 
   const verifyTicketPaymentMutation = useMutation({
-    mutationFn: VerifyTicketPayment
+    mutationFn: VerifyTicketPayment,
   });
 
   const verifyBanquetPaymentMutation = useMutation({
-    mutationFn: verifyBanquetPayment
+    mutationFn: verifyBanquetPayment,
   });
 
   return {
@@ -45,6 +45,6 @@ export const useBookings = () => {
     bookRestaurantBanquetMutation,
     applyCodeMutation,
     verifyTicketPaymentMutation,
-    verifyBanquetPaymentMutation
+    verifyBanquetPaymentMutation,
   };
 };

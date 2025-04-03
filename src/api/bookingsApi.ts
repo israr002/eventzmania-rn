@@ -1,5 +1,4 @@
 import { API_ENDPOINTS } from "constants/apiEndpoints";
-
 import { apiCallService } from "./apiService";
 
 export const getTicketBookings = async () => {
@@ -19,7 +18,7 @@ export const bookTicket = async (data: BookTicketRequest) => {
 };
 
 export type BookRestaurantBanquetRequest = {
-  finalAmount: number;
+  finalAmount: Number;
 };
 export const bookRestaurantBanquet = async (
   data: BookRestaurantBanquetRequest
@@ -52,14 +51,14 @@ export type VerifyBanquetPaymentRequest = {
   date: Date;
   fromTime: string;
   toTime: string;
-  occasionId: number;
-  packageId: number;
-  noOfPeople: number;
-  totalAmount: number;
-  couponId?: number;
-  couponDiscount?: number;
-  restaurantDiscount: number;
-  finalAmount: number;
+  occasionId: Number;
+  packageId: Number;
+  noOfPeople: Number;
+  totalAmount: Number;
+  couponId?: Number;
+  couponDiscount?: Number;
+  restaurantDiscount: Number;
+  finalAmount: Number;
   orderId: string;
   transaction: any;
 };
