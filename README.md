@@ -2,6 +2,9 @@
 
 EventzMania is a mobile application designed to help users explore restaurants, book venues for special occasions, and purchase event tickets. Users can browse restaurant listings, view food packages, and check event schedules. Additionally, users can interact with social content by liking and commenting on posts shared by restaurants. Payments are handled via Razorpay for seamless transactions.
 
+## Watch the Demo Video
+[![Watch the video](https://img.youtube.com/vi/Zl-0lBTURWg/0.jpg)](https://www.youtube.com/watch?v=Zl-0lBTURWg)
+
 ## Important Libraries Used
 
 ###  State Management
